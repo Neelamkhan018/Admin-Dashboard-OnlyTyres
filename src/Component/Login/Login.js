@@ -1,5 +1,10 @@
 import React , {useEffect} from "react";
 
+
+import url from "../../env.js"
+
+
+
 const Login = ()=>{
 
     const [email,setEmail] = React.useState('');
@@ -19,7 +24,7 @@ const Login = ()=>{
 //api fetch
     const handleLogin=  async ()=>{
         console.log(email,password)
-        let result = await fetch('http://localhost:8000/Login',{
+        let result = await fetch(`${url.nodeapipath}/Login`,{
             method:'post',
             body:JSON.stringify({email,password}),
             headers:{ 
@@ -89,4 +94,6 @@ const Login = ()=>{
 }
 
 export default Login;
+
+
 

@@ -4,11 +4,32 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Siderbar/Sidebar';
 
 
+
+import url from "../../env.js"
+
+
+
 const CarModelPage = () => {
+
+
+const navigate = useNavigate()
+
+  useEffect(() => {
+    // Check if the user navigated directly to this page
+    if (document.referrer === '') {
+        // If the referrer is empty, redirect to home or another page
+        navigate('/');
+    }
+}, [navigate]);
+
+
+
+
+
   const [carModels, setCarModels] = useState([]);
   const { state } = useLocation(); // Access location state
   const [error, setError] = useState('');
@@ -20,13 +41,11 @@ const CarModelPage = () => {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
-  useEffect(() => {
-    fetchCarModels();
-  }, []);
+
 
   const fetchCarModels = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/get-carmodel?brandid=${state.brandid}`);
+      const response = await fetch(`${url.nodeapipath}/get-carmodel?brandid=${state.brandid}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setCarModels(data);
@@ -35,6 +54,9 @@ const CarModelPage = () => {
     }
   };
 
+  useEffect(() => {
+    fetchCarModels();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -59,7 +81,7 @@ const CarModelPage = () => {
     form.append('brandid', state.brandid);
 
     try {
-      const response = await fetch("http://localhost:8000/add-carmodel", {
+      const response = await fetch(`${url.nodeapipath}/add-carmodel`, {
         method: 'POST',
         body: form,
       });
@@ -81,7 +103,7 @@ const CarModelPage = () => {
 
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/active-carmodel/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-carmodel/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +128,7 @@ const CarModelPage = () => {
 
   const deleteCarModel = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8000/delete-carmodel/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${url.nodeapipath}/delete-carmodel/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Network response was not ok');
       fetchCarModels();
     } catch (error) {
@@ -244,7 +266,7 @@ const CarModelPage = () => {
                               <tr key={model._id}>
                                     <td className="table-cell">
                 {model.image.map((item, idx) => (
-                  <img key={idx} src={`http://localhost:8000/uploads/${item}`} alt={item} className="cat-thumb" />
+                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
                 ))}
               </td>
                                 <td>{model.name}</td>

@@ -1,25 +1,20 @@
-
-
 import React, { useState, useEffect } from 'react';
-import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
+import Footer from '../Footer/Footer';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Siderbar/Sidebar';
-import axios from 'axios';  
-import { Link, useNavigate } from 'react-router-dom';
+
 
 
 import url from "../../env.js"
 
 
-export default function Carbrand() {
-  const [carBrands, setCarBrands] = useState([]);
-  const [error, setError] = useState('');
 
-  
-
-  const navigate = useNavigate()
+const TruckModelPage = () => {
 
 
+
+const navigate = useNavigate()
 
   useEffect(() => {
     // Check if the user navigated directly to this page
@@ -34,111 +29,78 @@ export default function Carbrand() {
 
 
 
+  const [truckModels, setTruckModels] = useState([]);
+  const { state } = useLocation(); // Access location state
+  const [error, setError] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
     description: '',
-    image: [],
+    image: []
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
- 
+  useEffect(() => {
+    fetchTruckModels();
+  }, []);
 
-  
-useEffect(() => {
-  const fetchCarBrands = async () => {
+  const fetchTruckModels = async () => {
     try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrands-with-model-counts`);
-      setCarBrands(response.data);
+      const response = await fetch(`${url.nodeapipath}/get-Truckmodel?brandid=${state.brandid}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      setTruckModels(data);
     } catch (error) {
-      console.error('Error fetching car brands:', error);
+      console.error('Error fetching truck models:', error);
     }
   };
 
-  fetchCarBrands();
-}, []);
-
-
- // Fetch car brands on component load
- useEffect(() => {
-  fetchCarBrands();
-}, []);
-
-
-
-  // Function to fetch car brands
-  const fetchCarBrands = async () => {
-    try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
-      console.log('Fetched car brands:', response.data); // Log fetched data
-      setCarBrands(response.data);
-    } catch (error) {
-      console.error('Error fetching car brands:', error);
-    }
-  };
-
-  // Function to delete a car brand
-  const deleteCarBrand = async (id) => {
-    try {
-      await axios.delete(`${url.nodeapipath}/car-delete/${id}`);
-      console.log('Deleted car brand with id:', id); // Log delete action
-      fetchCarBrands(); // Refresh the car brand list after deletion
-    } catch (error) {
-      console.error('Error deleting car brand:', error);
-    }
-  };
-
-  // Handle input changes in the form
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === 'image') {
-      const selectedImages = Array.from(files);
-      setFormData({ ...formData, image: selectedImages });
-      setImagePreviews(selectedImages.map(file => URL.createObjectURL(file)));
+      setFormData({ ...formData, [name]: files });
+      setImagePreviews(Array.from(files).map(file => URL.createObjectURL(file)));
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  // Handle form submission to add a car brand
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
     form.append('name', formData.name);
     form.append('slug', formData.slug);
     form.append('description', formData.description);
+
     for (let i = 0; i < formData.image.length; i++) {
-      form.append('image', formData.image[i]);
+      form.append('image', formData.image[i]); // Use 'images' to match the backend expectation
     }
+    form.append('brandid', state.brandid);
 
     try {
-      await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await fetch(`${url.nodeapipath}/add-Truckmodel`, {
+        method: 'POST',
+        body: form,
       });
-      console.log('Added new car brand:', formData); // Log form data
-      fetchCarBrands(); // Refresh the car brand list after adding
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Success:', data);
+
+      fetchTruckModels(); // Refresh the truck model list after adding/updating
       resetForm(); // Reset the form
     } catch (error) {
-      console.error('Error adding car brand:', error);
+      console.error('Error submitting form:', error.message);
     }
   };
 
-  // Reset form and previews
-  const resetForm = () => {
-    setFormData({
-      name: '',
-      slug: '',
-      description: '',
-      image: [],
-    });
-    setImagePreviews([]);
-  };
-
-  // Toggle active status
- 
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`${url.nodeapipath}/active-carbrand/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-Truckmodel/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -147,23 +109,37 @@ useEffect(() => {
       });
   
       if (response.ok) {
-        setCarBrands((prevBrands) =>
-          prevBrands.map((brand) =>
-            brand._id === id ? { ...brand, active: newStatus } : brand
+        setTruckModels((prevModel) =>
+          prevModel.map((model) =>
+            model._id === id ? { ...model, active: newStatus } : model
           )
         );
-        
       } else {
         const errorText = await response.text();
-        setError(`Failed to update brand status: ${errorText}`);
+        setError(`Failed to update model status: ${errorText}`);
       }
     } catch (error) {
-      setError(`Error updating brand status: ${error.message}`);
+      setError(`Error updating model status: ${error.message}`);
     }
   };
 
+  const deleteTruckModel = async (id) => {
+    try {
+      const response = await fetch(`${url.nodeapipath}/delete-Truckmodel/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Network response was not ok');
+      fetchTruckModels();
+    } catch (error) {
+      console.error('Error deleting truck model:', error);
+    }
+  };
+
+  const resetForm = () => {
+    setFormData({ name: '', slug: '', description: '', image: [] });
+    setImagePreviews([]);
+  };
+
   return (
-    <body className="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+    <div className="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
       <div className="wrapper">
         <Sidebar />
         <div className="ec-page-wrapper">
@@ -171,19 +147,19 @@ useEffect(() => {
           <div className="ec-content-wrapper">
             <div className="content">
               <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-                <h1>Car Brand Category</h1>
+                <h1>Truck Model Category</h1>
                 <p className="breadcrumbs">
                   <span><a href="#">Home</a></span>
-                  <span><i className="mdi mdi-chevron-right"></i></span>Car Brand Category
+                  <span><i className="mdi mdi-chevron-right"></i></span>Truck Model Category
                 </p>
               </div>
               <div className="row">
-                {/* Form to Add a Car Brand */}
+                {/* Form to Add a Truck Model */}
                 <div className="col-xl-4 col-lg-12">
                   <div className="ec-cat-list card card-default mb-24px">
                     <div className="card-body">
                       <div className="ec-cat-form ec-vendor-uploads">
-                        <h4>Add Category</h4>
+                        <h4>Add Model</h4>
                         <form onSubmit={handleSubmit}>
                           <div className="form-group row">
                             <label htmlFor="name" className="col-12 col-form-label">Name</label>
@@ -251,7 +227,9 @@ useEffect(() => {
 
                           <div className="row">
                             <div className="col-12">
-                              <button type="submit" className="btn btn-primary">Add</button>
+                              <button type="submit" className="btn btn-primary">
+                                Submit
+                              </button>
                             </div>
                           </div>
                         </form>
@@ -260,7 +238,7 @@ useEffect(() => {
                   </div>
                 </div>
 
-                {/* Table to Display Car Brands */}
+                {/* Table to Display Truck Models */}
                 <div className="col-xl-8 col-lg-12">
                   <div className="ec-cat-list card card-default">
                     <div className="card-body">
@@ -270,7 +248,6 @@ useEffect(() => {
                             <tr>
                               <th>Image</th>
                               <th>Name</th>
-                              <th>Model</th>
                               <th>Product</th>
                               <th>Total Sell</th>
                               <th>Active</th>
@@ -278,48 +255,35 @@ useEffect(() => {
                             </tr>
                           </thead>
                           <tbody>
-                            {carBrands.map((brand) => (
-                              <tr key={brand._id}>
-                               
-
-    <td className="table-cell">
-                {brand.image.map((item, idx) => (
-                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
-                ))}
-              </td>
-                                <td>{brand.name}</td>
-                                <td>{brand.modelCount}</td>
-                                <td>{brand.product}</td>
-                                <td>{brand.Totalsell}</td>
+                            {truckModels.map((model) => (
+                              <tr key={model._id}>
+                                <td className="table-cell">
+                                  {model.image.map((item, idx) => (
+                                    <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                                  ))}
+                                </td>
+                                <td>{model.name}</td>
+                                <td>{model.product}</td>
+                                <td>{model.totalsell}</td>
                                 <td>
-                              <input
-                                type="checkbox"
-                                checked={brand.active}
-                                onChange={() => handleToggleActive(brand._id, !brand.active)}
-                              />
-                            </td>
+                                  <input
+                                    type="checkbox"
+                                    checked={model.active}
+                                    onChange={() => handleToggleActive(model._id, !model.active)}
+                                  />
+                                </td>
                                 <td>
                                   <div className="btn-group">
-                                    <Link 
-                                       to={`/caredit/${brand._id}`} 
+                                    <Link
+                                      to={`/truckmodeledit/${model._id}`}
                                       className="btn btn-outline-success"
                                     >
                                       Edit
                                     </Link>
-                                    <button
-
-                                   
-                                      onClick={()=>{navigate("/carbrand-model",{state:{brandid:brand._id}})}}
-                                       
-                                      
-                                      className="btn btn-outline-success"
-                                    >
-                                      Add Model
-                                    </button>
 
                                     <button
                                       type="button"
-                                      onClick={() => deleteCarBrand(brand._id)}
+                                      onClick={() => deleteTruckModel(model._id)}
                                       className="btn btn-outline-danger"
                                     >
                                       Delete
@@ -336,10 +300,12 @@ useEffect(() => {
                 </div>
               </div>
             </div>
+            <Footer />
           </div>
-          <Footer />
         </div>
       </div>
-    </body>
+    </div>
   );
-}
+};
+
+export default TruckModelPage;

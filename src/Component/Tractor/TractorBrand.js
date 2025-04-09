@@ -1,25 +1,21 @@
-
-
 import React, { useState, useEffect } from 'react';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
-import Sidebar from '../Siderbar/Sidebar';
 import axios from 'axios';  
 import { Link, useNavigate } from 'react-router-dom';
+import Sidebar from '../Siderbar/Sidebar';
 
 
 import url from "../../env.js"
 
 
-export default function Carbrand() {
-  const [carBrands, setCarBrands] = useState([]);
-  const [error, setError] = useState('');
 
-  
-
-  const navigate = useNavigate()
+export default function TractorBrand() {
 
 
+
+
+const navigate = useNavigate()
 
   useEffect(() => {
     // Check if the user navigated directly to this page
@@ -34,6 +30,10 @@ export default function Carbrand() {
 
 
 
+
+  const [tractorBrands, setTractorBrands] = useState([]);
+  const [error, setError] = useState('');
+ 
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -42,49 +42,28 @@ export default function Carbrand() {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
- 
+  // Fetch tractor brands on component load
+  useEffect(() => {
+    fetchTractorBrands();
+  }, []);
 
-  
-useEffect(() => {
-  const fetchCarBrands = async () => {
+  const fetchTractorBrands = async () => {
     try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrands-with-model-counts`);
-      setCarBrands(response.data);
+      const response = await axios.get(`${url.nodeapipath}/get-Tractorbrands-with-model-counts`);
+      setTractorBrands(response.data);
     } catch (error) {
-      console.error('Error fetching car brands:', error);
+      console.error('Error fetching tractor brands:', error);
     }
   };
 
-  fetchCarBrands();
-}, []);
-
-
- // Fetch car brands on component load
- useEffect(() => {
-  fetchCarBrands();
-}, []);
-
-
-
-  // Function to fetch car brands
-  const fetchCarBrands = async () => {
+  // Function to delete a tractor brand
+  const deleteTractorBrand = async (id) => {
     try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
-      console.log('Fetched car brands:', response.data); // Log fetched data
-      setCarBrands(response.data);
+      await axios.delete(`${url.nodeapipath}/Tractor-delete/${id}`);
+      console.log('Deleted tractor brand with id:', id);
+      fetchTractorBrands(); // Refresh the tractor brand list after deletion
     } catch (error) {
-      console.error('Error fetching car brands:', error);
-    }
-  };
-
-  // Function to delete a car brand
-  const deleteCarBrand = async (id) => {
-    try {
-      await axios.delete(`${url.nodeapipath}/car-delete/${id}`);
-      console.log('Deleted car brand with id:', id); // Log delete action
-      fetchCarBrands(); // Refresh the car brand list after deletion
-    } catch (error) {
-      console.error('Error deleting car brand:', error);
+      console.error('Error deleting tractor brand:', error);
     }
   };
 
@@ -100,7 +79,7 @@ useEffect(() => {
     }
   };
 
-  // Handle form submission to add a car brand
+  // Handle form submission to add a tractor brand
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -112,14 +91,14 @@ useEffect(() => {
     }
 
     try {
-      await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
+      await axios.post(`${url.nodeapipath}/add-Tractorbrand`, form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      console.log('Added new car brand:', formData); // Log form data
-      fetchCarBrands(); // Refresh the car brand list after adding
+      console.log('Added new tractor brand:', formData);
+      fetchTractorBrands(); // Refresh the tractor brand list after adding
       resetForm(); // Reset the form
     } catch (error) {
-      console.error('Error adding car brand:', error);
+      console.error('Error adding tractor brand:', error);
     }
   };
 
@@ -135,24 +114,22 @@ useEffect(() => {
   };
 
   // Toggle active status
- 
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`${url.nodeapipath}/active-carbrand/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-Tractorbrand/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ active: newStatus }),
       });
-  
+
       if (response.ok) {
-        setCarBrands((prevBrands) =>
+        setTractorBrands((prevBrands) =>
           prevBrands.map((brand) =>
             brand._id === id ? { ...brand, active: newStatus } : brand
           )
         );
-        
       } else {
         const errorText = await response.text();
         setError(`Failed to update brand status: ${errorText}`);
@@ -171,19 +148,19 @@ useEffect(() => {
           <div className="ec-content-wrapper">
             <div className="content">
               <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-                <h1>Car Brand Category</h1>
+                <h1>Tractor Brand Category</h1>
                 <p className="breadcrumbs">
                   <span><a href="#">Home</a></span>
-                  <span><i className="mdi mdi-chevron-right"></i></span>Car Brand Category
+                  <span><i className="mdi mdi-chevron-right"></i></span>Tractor Brand Category
                 </p>
               </div>
               <div className="row">
-                {/* Form to Add a Car Brand */}
+                {/* Form to Add a Tractor Brand */}
                 <div className="col-xl-4 col-lg-12">
                   <div className="ec-cat-list card card-default mb-24px">
                     <div className="card-body">
                       <div className="ec-cat-form ec-vendor-uploads">
-                        <h4>Add Category</h4>
+                        <h4>Add Tractor Brand</h4>
                         <form onSubmit={handleSubmit}>
                           <div className="form-group row">
                             <label htmlFor="name" className="col-12 col-form-label">Name</label>
@@ -260,7 +237,7 @@ useEffect(() => {
                   </div>
                 </div>
 
-                {/* Table to Display Car Brands */}
+                {/* Table to Display Tractor Brands */}
                 <div className="col-xl-8 col-lg-12">
                   <div className="ec-cat-list card card-default">
                     <div className="card-body">
@@ -270,7 +247,7 @@ useEffect(() => {
                             <tr>
                               <th>Image</th>
                               <th>Name</th>
-                              <th>Model</th>
+                              <th>Model Count</th> {/* Added Model Count Column */}
                               <th>Product</th>
                               <th>Total Sell</th>
                               <th>Active</th>
@@ -278,40 +255,35 @@ useEffect(() => {
                             </tr>
                           </thead>
                           <tbody>
-                            {carBrands.map((brand) => (
+                            {tractorBrands.map((brand) => (
                               <tr key={brand._id}>
-                               
-
-    <td className="table-cell">
-                {brand.image.map((item, idx) => (
-                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
-                ))}
-              </td>
+                                <td className="table-cell">
+                                  {brand.image.map((item, idx) => (
+                                    <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                                  ))}
+                                </td>
                                 <td>{brand.name}</td>
-                                <td>{brand.modelCount}</td>
+                                <td>{brand.modelCount}</td> {/* Display Model Count */}
                                 <td>{brand.product}</td>
                                 <td>{brand.Totalsell}</td>
                                 <td>
-                              <input
-                                type="checkbox"
-                                checked={brand.active}
-                                onChange={() => handleToggleActive(brand._id, !brand.active)}
-                              />
-                            </td>
+                                  <input
+                                    type="checkbox"
+                                    checked={brand.active}
+                                    onChange={() => handleToggleActive(brand._id, !brand.active)}
+                                  />
+                                </td>
                                 <td>
                                   <div className="btn-group">
                                     <Link 
-                                       to={`/caredit/${brand._id}`} 
+                                       to={`/Tractoredit/${brand._id}`} 
                                       className="btn btn-outline-success"
                                     >
                                       Edit
                                     </Link>
-                                    <button
 
-                                   
-                                      onClick={()=>{navigate("/carbrand-model",{state:{brandid:brand._id}})}}
-                                       
-                                      
+                                   <button
+                                      onClick={()=>{navigate("/Tractormodel",{state:{brandid:brand._id}})}}                                   
                                       className="btn btn-outline-success"
                                     >
                                       Add Model
@@ -319,7 +291,7 @@ useEffect(() => {
 
                                     <button
                                       type="button"
-                                      onClick={() => deleteCarBrand(brand._id)}
+                                      onClick={() => deleteTractorBrand(brand._id)}
                                       className="btn btn-outline-danger"
                                     >
                                       Delete

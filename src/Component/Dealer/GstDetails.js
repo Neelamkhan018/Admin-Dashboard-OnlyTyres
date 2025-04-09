@@ -1,276 +1,144 @@
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import './DealerCreate.css'
+
+
+
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import { Link } from "react-router-dom";
+// import "./DealerCreate.css";
+
 // const GstDetails = () => {
 //     const [formData, setFormData] = useState({
-//         email: '',
-//         mobileNumber: '',
-//         gstNumber: '',
-//         panDetails: '',
-//         bankAccount: '',
-//         otp: '',
+//         email: "",
+//         mobileNumber: "",
+//         gstNumber: "",
+//         panDetails: "",
+//         bankAccount: "",
+//         clientId: ""  // Add clientId field
 //     });
-//     const [otpSent, setOtpSent] = useState(false);
-//     const [otpVerified, setOtpVerified] = useState(false);
-//     const [otpError, setOtpError] = useState('');
+
+//     const [submissionError, setSubmissionError] = useState("");
+//     const [successMessage, setSuccessMessage] = useState("");
+
+//     // Load clientId from localStorage when the component mounts
+//     useEffect(() => {
+//         const storedClientId = localStorage.getItem("clientId");
+//         if (storedClientId) {
+//             setFormData((prevData) => ({ ...prevData, clientId: storedClientId }));
+//         }
+//     }, []);
 
 //     const handleChange = (e) => {
 //         const { name, value } = e.target;
 //         setFormData({ ...formData, [name]: value });
 //     };
 
-//     const handleSendOtp = async () => {
-//         try {
-//             const response = await axios.post('http://localhost:8000/gst-generate-otp', {
-//                 email: formData.email,
-//                 mobileNumber: formData.mobileNumber,
-//             });
-//             setOtpSent(true);
-//             alert(`OTP sent: ${response.data.otp}`); // Display OTP in alert
-//         } catch (error) {
-//             alert('Error sending OTP');
-//         }
-//     };
+//     // const handleSubmit = async (e) => {
+//     //     e.preventDefault();
+//     //     try {
+//     //         await axios.post("http://localhost:8000/add-gst-details", formData);
+//     //         setSuccessMessage("GST details saved successfully");
+//     //         setFormData({
+//     //             email: "",
+//     //             mobileNumber: "",
+//     //             gstNumber: "",
+//     //             panDetails: "",
+//     //             bankAccount: "",
+//     //             clientId: localStorage.getItem("clientId") // Retain clientId after reset
+//     //         });
+//     //         setSubmissionError("");
+//     //     } catch (error) {
+//     //         setSubmissionError("Error saving GST details");
+//     //         setSuccessMessage("");
+//     //     }
+//     // };
 
-//     const handleVerifyOtp = async () => {
-//         try {
-//             await axios.post('http://localhost:8000/gst-verify-otp', {
-//                 email: formData.email,
-//                 otp: formData.otp,
-//             });
-//             setOtpVerified(true);
-//             alert('OTP verified successfully');
-//         } catch (error) {
-//             setOtpError('Invalid OTP');
-//         }
-//     };
 
 //     const handleSubmit = async (e) => {
 //         e.preventDefault();
-//         if (otpVerified) {
-//             try {
-//                 await axios.post('http://localhost:8000/add-gst-details', formData);
-//                 alert('GST details saved successfully');
-//             } catch (error) {
-//                 alert('Error saving GST details');
-//             }
-//         } else {
-//             alert('Please verify your OTP first');
+//         const clientId = localStorage.getItem('clientId'); // Get clientId from localStorage
+//         if (!clientId) {
+//             setSubmissionError('Client ID not found. Please register first.');
+//             return;
 //         }
-//     };
-
-//     return (
-//         <div>
-//             <h2>Tax Details Form</h2>
-//             <form onSubmit={handleSubmit}>
-//                 <input
-//                     type="email"
-//                     name="email"
-//                     placeholder="Email"
-//                     value={formData.email}
-//                     onChange={handleChange}
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="mobileNumber"
-//                     placeholder="Mobile Number"
-//                     value={formData.mobileNumber}
-//                     onChange={handleChange}
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="gstNumber"
-//                     placeholder="GST Number"
-//                     value={formData.gstNumber}
-//                     onChange={handleChange}
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="panDetails"
-//                     placeholder="PAN Details"
-//                     value={formData.panDetails}
-//                     onChange={handleChange}
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="bankAccount"
-//                     placeholder="Bank Account Number"
-//                     value={formData.bankAccount}
-//                     onChange={handleChange}
-//                     required
-//                 />
-//                 {otpSent && !otpVerified && (
-//                     <div>
-//                         <input
-//                             type="text"
-//                             name="otp"
-//                             placeholder="Enter OTP"
-//                             value={formData.otp}
-//                             onChange={handleChange}
-//                             required
-//                         />
-//                         <button type="button" onClick={handleVerifyOtp}>
-//                             Verify OTP
-//                         </button>
-//                         {otpError && <p style={{ color: 'red' }}>{otpError}</p>}
-//                     </div>
-//                 )}
-//                 <button type="button" onClick={handleSendOtp}>
-//                     Send OTP
-//                 </button>
-//                 <button type="submit" disabled={!otpVerified}>
-//                     Submit
-//                 </button>
-//             </form>
-//         </div>
-//     );
-// };
-
-// export default GstDetails;
-
-
-
-
-
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// import './DealerCreate.css';
-
-// const GstDetails = () => {
-//     const [formData, setFormData] = useState({
-//         email: '',
-//         mobileNumber: '',
-//         gstNumber: '',
-//         panDetails: '',
-//         bankAccount: '',
-//         otp: '',
-//     });
-//     const [otpSent, setOtpSent] = useState(false);
-//     const [otpVerified, setOtpVerified] = useState(false);
-//     const [otpError, setOtpError] = useState('');
-
-//     const handleChange = (e) => {
-//         const { name, value } = e.target;
-//         setFormData({ ...formData, [name]: value });
-//     };
-
-//     const handleSendOtp = async () => {
+    
+//         const data = { ...formData, clientId }; // Add clientId to form data
+    
 //         try {
-//             const response = await axios.post('http://localhost:8000/gst-generate-otp', {
-//                 email: formData.email,
-//                 mobileNumber: formData.mobileNumber,
-//             });
-//             setOtpSent(true);
-//             alert(`OTP sent: ${response.data.otp}`);
+//             await axios.post('http://localhost:8000/add-gst-details', data);
+//             setSuccessMessage('GST details saved successfully');
+//             setFormData({ email: '', mobileNumber: '', gstNumber: '', panDetails: '' });
+//             setSubmissionError('');
 //         } catch (error) {
-//             alert('Error sending OTP');
+//             setSubmissionError('Error saving GST details');
+//             setSuccessMessage('');
 //         }
 //     };
+    
 
-//     const handleVerifyOtp = async () => {
-//         try {
-//             await axios.post('http://localhost:8000/gst-verify-otp', {
-//                 email: formData.email,
-//                 otp: formData.otp,
-//             });
-//             setOtpVerified(true);
-//             alert('OTP verified successfully');
-//         } catch (error) {
-//             setOtpError('Invalid OTP');
-//         }
-//     };
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         if (otpVerified) {
-//             try {
-//                 await axios.post('http://localhost:8000/add-gst-details', formData);
-//                 alert('GST details saved successfully');
-//             } catch (error) {
-//                 alert('Error saving GST details');
-//             }
-//         } else {
-//             alert('Please verify your OTP first');
-//         }
-//     };
 
 //     return (
 //         <div className="dealer-form-container">
 //             <h2 className="dealer-title">Tax Details Form</h2>
-//             <form onSubmit={handleSubmit} className="dealer-form">
-//                 <input
-//                     type="email"
-//                     name="email"
-//                     placeholder="Email"
-//                     value={formData.email}
-//                     onChange={handleChange}
-//                     className="dealer-input"
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="mobileNumber"
-//                     placeholder="Mobile Number"
-//                     value={formData.mobileNumber}
-//                     onChange={handleChange}
-//                     className="dealer-input"
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="gstNumber"
-//                     placeholder="GST Number"
-//                     value={formData.gstNumber}
-//                     onChange={handleChange}
-//                     className="dealer-input"
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="panDetails"
-//                     placeholder="PAN Details"
-//                     value={formData.panDetails}
-//                     onChange={handleChange}
-//                     className="dealer-input"
-//                     required
-//                 />
-//                 <input
-//                     type="text"
-//                     name="bankAccount"
-//                     placeholder="Bank Account Number"
-//                     value={formData.bankAccount}
-//                     onChange={handleChange}
-//                     className="dealer-input"
-//                     required
-//                 />
-//                 {otpSent && !otpVerified && (
-//                     <div>
-//                         <input
-//                             type="text"
-//                             name="otp"
-//                             placeholder="Enter OTP"
-//                             value={formData.otp}
-//                             onChange={handleChange}
-//                             className="dealer-input"
-//                             required
-//                         />
-//                         <button type="button" onClick={handleVerifyOtp} className="dealer-form-btn">
-//                             Verify OTP
-//                         </button>
-//                         {otpError && <p style={{ color: 'red' }}>{otpError}</p>}
-//                     </div>
-//                 )}
-//                 <button type="button" onClick={handleSendOtp} className="dealer-form-btn">
-//                     Send OTP
-//                 </button>
-//                 <button type="submit" disabled={!otpVerified} className="dealer-form-btn">
-//                     Submit
-//                 </button>
-//             </form>
+//             {successMessage ? (
+//                 <div>
+//                     <p style={{ color: "green" }}>{successMessage}</p>
+//                     <Link to="/bank-details">
+//                         <button className="dealer-form-btn">Go to Next</button>
+//                     </Link>
+//                 </div>
+//             ) : (
+//                 <form onSubmit={handleSubmit} className="dealer-form">
+//                     <input
+//                         type="email"
+//                         name="email"
+//                         placeholder="Email"
+//                         value={formData.email}
+//                         onChange={handleChange}
+//                         className="dealer-input"
+//                         required
+//                     />
+//                     <input
+//                         type="text"
+//                         name="mobileNumber"
+//                         placeholder="Mobile Number"
+//                         value={formData.mobileNumber}
+//                         onChange={handleChange}
+//                         className="dealer-input"
+//                         required
+//                     />
+//                     <input
+//                         type="text"
+//                         name="gstNumber"
+//                         placeholder="GST Number"
+//                         value={formData.gstNumber}
+//                         onChange={handleChange}
+//                         className="dealer-input"
+//                         required
+//                     />
+//                     <input
+//                         type="text"
+//                         name="panDetails"
+//                         placeholder="PAN Details"
+//                         value={formData.panDetails}
+//                         onChange={handleChange}
+//                         className="dealer-input"
+//                         required
+//                     />
+//                     <input
+//                         type="text"
+//                         name="bankAccount"
+//                         placeholder="Bank Account Number"
+//                         value={formData.bankAccount}
+//                         onChange={handleChange}
+//                         className="dealer-input"
+//                         required
+//                     />
+//                     <button type="submit" className="dealer-form-btn">
+//                         Submit
+//                     </button>
+//                     {submissionError && <p style={{ color: "red" }}>{submissionError}</p>}
+//                 </form>
+//             )}
 //         </div>
 //     );
 // };
@@ -279,84 +147,178 @@
 
 
 
-import React, { useState } from 'react';
-import axios from 'axios';
-import './DealerCreate.css';
-import { Link } from 'react-router-dom';
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+
+
+import url from "../../env.js"
+
 
 const GstDetails = () => {
+
+
+const navigate = useNavigate();
+
+      useEffect(() => {
+        // Check if the user navigated directly to this page
+        if (document.referrer === '') {
+            // If the referrer is empty, redirect to home or another page
+            navigate('/');
+        }
+    }, [navigate]);
+    
+
+
+
     const [formData, setFormData] = useState({
-        email: '',
-        mobileNumber: '',
-        gstNumber: '',
-        panDetails: '',
+        email: "",
+        mobileNumber: "",
+        gstNumber: "",
+        panDetails: "",
+        bankAccount: "",
+        clientId: ""  // Add clientId field
     });
-    const [submissionError, setSubmissionError] = useState('');
+
+    const [submissionError, setSubmissionError] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+
+    // Load clientId from localStorage when the component mounts
+    useEffect(() => {
+        const storedClientId = localStorage.getItem("clientId");
+        if (storedClientId) {
+            setFormData((prevData) => ({ ...prevData, clientId: storedClientId }));
+        }
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     };
 
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const clientId = localStorage.getItem('clientId'); // Get clientId from localStorage
+        if (!clientId) {
+            setSubmissionError('Client ID not found. Please register first.');
+            return;
+        }
+    
+        const data = { ...formData, clientId }; // Add clientId to form data
+    
         try {
-            await axios.post('http://localhost:8000/add-gst-details', formData);
-            alert('GST details saved successfully');
-            setFormData({ email: '', mobileNumber: '', gstNumber: '', panDetails: '' }); // Reset form
+            await axios.post(`${url.nodeapipath}/add-gst-details`, data);
+            setSuccessMessage('GST details saved successfully');
+            setFormData({ email: '', mobileNumber: '', gstNumber: '', panDetails: '' });
+            setSubmissionError('');
         } catch (error) {
             setSubmissionError('Error saving GST details');
+            setSuccessMessage('');
         }
     };
+    
+
 
     return (
-        <div className="dealer-form-container">
-            <h2 className="dealer-title">Tax Details Form</h2>
-            <form onSubmit={handleSubmit} className="dealer-form">
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="dealer-input"
-                    required
-                />
-                <input
-                    type="text"
-                    name="mobileNumber"
-                    placeholder="Mobile Number"
-                    value={formData.mobileNumber}
-                    onChange={handleChange}
-                    className="dealer-input"
-                    required
-                />
-                <input
-                    type="text"
-                    name="gstNumber"
-                    placeholder="GST Number"
-                    value={formData.gstNumber}
-                    onChange={handleChange}
-                    className="dealer-input"
-                    required
-                />
-                <input
-                    type="text"
-                    name="panDetails"
-                    placeholder="PAN Details"
-                    value={formData.panDetails}
-                    onChange={handleChange}
-                    className="dealer-input"
-                    required
-                />
-                <Link to="/bank-details">
-                <button type="submit" className="dealer-form-btn">
-                    Submit
-                </button>
-                </Link>
-                {submissionError && <p style={{ color: 'red' }}>{submissionError}</p>}
-            </form>
+        <div className="sign-inup">
+        <div className="container d-flex align-items-center justify-content-center form-height-login pt-4">
+            <div className="row justify-content-center w-100">
+                <div className="col-lg-6 col-md-8">
+                    <div className="card">
+                        <div className="card-header btn btn-primary">
+                            <div className="ec-brand">
+                                <a href="#" title="Ekka" style={{ color: 'white', fontWeight: 'bold', fontSize: '35px' }}>
+                                    Tax Details Form
+                                </a>
+                            </div>
+                        </div>
+                        <div className="card-body p-6">
+                            <h4 className="text-dark mb-4 text-center">Enter Tax Details</h4>
+                            {successMessage ? (
+                                <div>
+                                    <p className="text-success text-center">{successMessage}</p>
+                                    <div className="d-grid">
+                                        <Link to="/bank-details">
+                                            <button className="btn btn-primary">Go to Next</button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleSubmit} className="dealer-login-form">
+                                    <div className="form-group mb-4">
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group mb-4">
+                                        <input
+                                            type="text"
+                                            name="mobileNumber"
+                                            placeholder="Mobile Number"
+                                            value={formData.mobileNumber}
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group mb-4">
+                                        <input
+                                            type="text"
+                                            name="gstNumber"
+                                            placeholder="GST Number"
+                                            value={formData.gstNumber}
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group mb-4">
+                                        <input
+                                            type="text"
+                                            name="panDetails"
+                                            placeholder="PAN Details"
+                                            value={formData.panDetails}
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group mb-4">
+                                        <input
+                                            type="text"
+                                            name="bankAccount"
+                                            placeholder="Bank Account Number"
+                                            value={formData.bankAccount}
+                                            onChange={handleChange}
+                                            className="form-control"
+                                            required
+                                        />
+                                    </div>
+                                    {submissionError && <p className="text-danger text-center">{submissionError}</p>}
+                                    <div className="d-grid">
+                                        <button type="submit" className="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    
     );
 };
 

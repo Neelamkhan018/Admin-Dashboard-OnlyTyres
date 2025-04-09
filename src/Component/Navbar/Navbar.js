@@ -1,7 +1,20 @@
 
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
+
+
+	const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("user"); // Clear authentication data
+        navigate("/"); // Redirect to home
+        window.location.reload(); // Ensure state resets
+    };
+
+
+
 	const auth= localStorage.getItem('user');
   return (
     
@@ -60,7 +73,7 @@ export default function Navbar() {
 										<a href="javascript:0"> <i className="mdi mdi-settings-outline"></i> Setting </a>
 									</li>
 									<li className="dropdown-footer">
-										<a href="/"> <i className="mdi mdi-logout"></i> Log Out </a>
+										<a onClick={handleLogout}> <i className="mdi mdi-logout"></i> Log Out </a>
 									</li>
 								</ul>
 							</li>

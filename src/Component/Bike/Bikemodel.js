@@ -2,12 +2,34 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // Import Link for navigation
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // Import Link for navigation
 import Sidebar from '../Siderbar/Sidebar';
 import Navbar from '../Navbar/Navbar';
 import Footer from '../Footer/Footer';
 
+
+
+import url from "../../env.js"
+
+
 const BikeModelPage = () => {
+
+
+
+const navigate = useNavigate()
+
+  useEffect(() => {
+    // Check if the user navigated directly to this page
+    if (document.referrer === '') {
+        // If the referrer is empty, redirect to home or another page
+        navigate('/');
+    }
+}, [navigate]);
+
+
+
+
+
   const [bikeModels, setBikeModels] = useState([]);
   const [error, setError] = useState('');
   const { state } = useLocation();
@@ -19,13 +41,11 @@ const BikeModelPage = () => {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
-  useEffect(() => {
-    fetchBikeModels();
-  }, []);
+
 
   const fetchBikeModels = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/get-bikemodel?brandid=${state.brandid}`);
+      const response = await fetch(`${url.nodeapipath}/get-bikemodel?brandid=${state.brandid}`);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setBikeModels(data);
@@ -33,6 +53,10 @@ const BikeModelPage = () => {
       console.error('Error fetching bike models:', error);
     }
   };
+
+  useEffect(() => {
+    fetchBikeModels();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -60,7 +84,7 @@ const BikeModelPage = () => {
 
     try {
       // API request
-      const response = await fetch('http://localhost:8000/add-bikemodel', {
+      const response = await fetch(`${url.nodeapipath}/add-bikemodel`, {
         method: 'POST',
         body: form,
       });
@@ -87,7 +111,7 @@ const BikeModelPage = () => {
 
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/active-bikemodel/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-bikemodel/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +136,7 @@ const BikeModelPage = () => {
 
   const deleteBikeModel = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8000/delete-bikemodel/${id}`, { method: 'DELETE' });
+      const response = await fetch(`${url.nodeapipath}/delete-bikemodel/${id}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Network response was not ok');
       fetchBikeModels();
     } catch (error) {
@@ -247,7 +271,7 @@ const BikeModelPage = () => {
                               <tr key={model._id}>
                                     <td className="table-cell">
                 {model.image.map((item, idx) => (
-                  <img key={idx} src={`http://localhost:8000/uploads/${item}`} alt={item} className="cat-thumb" />
+                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
                 ))}
               </td>
                                 <td>{model.name}</td>

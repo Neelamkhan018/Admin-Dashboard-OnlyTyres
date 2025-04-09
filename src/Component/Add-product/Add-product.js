@@ -8,7 +8,28 @@ import Sidebar from '../Siderbar/Sidebar';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css'; // or 'quill.bubble.css', depending on the theme
+import { useNavigate } from 'react-router-dom';
+
+
+import url from "../../env.js"
+
+
  const AddTyreForm = () => {
+
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user navigated directly to this page
+    if (document.referrer === '') {
+        // If the referrer is empty, redirect to home or another page
+        navigate('/');
+    }
+}, [navigate]);
+
+
+
   const [type, setType] = useState('');
   const [title, setTitle] = useState('');
   // const [tyreType, setTyreType] = useState('');
@@ -33,9 +54,7 @@ import 'react-quill/dist/quill.snow.css'; // or 'quill.bubble.css', depending on
   const [manufactureYear, setManufactureYear] = useState('');
   const [description1, setDescription1] = useState('');
   const [warranty, setWarranty] = useState('');
- 
   const [quantity, setQuantity] = useState('');
- 
   const [tyreBrands, setTyreBrands] = useState([]);
   const [selectedTyreBrand, setSelectedTyreBrand] = useState([]);
 const [tyreType, setTyreType] = useState(''); // Radio button state: car or bike tyres
@@ -65,6 +84,25 @@ const [thumb5Images, setThumb5Images] = useState([]);
 const [thumb5ImageUrls, setThumb5ImageUrls] = useState([]);
 const [thumb6Images, setThumb6Images] = useState([]);
 const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
+
+
+
+//truck
+const [truckBrands, setTruckBrands] = useState([]);
+const [selectedTruckBrands, setSelectedTruckBrands] = useState([]);
+const [truckModels, setTruckModels] = useState([]);
+const [selectedTruckModels, setSelectedTruckModels] = useState([]);
+
+
+// Add a state for tractor brands and models
+const [tractorBrands, setTractorBrands] = useState([]);
+const [selectedTractorBrands, setSelectedTractorBrands] = useState([]);
+const [tractorModels, setTractorModels] = useState([]);
+const [selectedTractorModels, setSelectedTractorModels] = useState([]);
+
+
+
+const [slug, setSlug] = useState("");
 
   const [addresses, setAddresses] = useState([
     { state: '', city: '', pinCode: '', details: '' }
@@ -105,7 +143,7 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
   useEffect(() => {
     const fetchTyreBrands = async () => {
       try {
-        const response = await fetch('http://localhost:8000/get-tyre-brands');
+        const response = await fetch(`${url.nodeapipath}/get-tyre-brands`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -250,6 +288,7 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
     try {
       const formData = new FormData();
       formData.append('type', type);
+      formData.append('slug', slug);
       formData.append('title', title);
       formData.append('tyreType', tyreType);
       formData.set('tyreBrand', selectedTyreBrand.map(option => option.value).join(','));
@@ -257,6 +296,17 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
       formData.append('carModel', selectedCarModels.map(option => option.value).join(','));
       formData.append('bikeBrand',selectedBikeBrands.map(option => option.value).join(','));
       formData.append('bikeModel', selectedBikeModels.map(option => option.value).join(','));
+
+      formData.append('truckBrand', selectedTruckBrands.map(option => option.value).join(',')); // Truck Brand
+      formData.append('truckModel', selectedTruckModels.map(option => option.value).join(',')); // Truck Model
+  
+// Add tractor brand and model
+formData.append('tractorBrand', selectedTractorBrands.map(option => option.value).join(',')); // Tractor Brand
+formData.append('tractorModel', selectedTractorModels.map(option => option.value).join(',')); // Tractor Model
+
+
+
+
       formData.append('width', width);
       formData.append('height', height);
       formData.append('customs', customs);
@@ -264,7 +314,6 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
       formData.append('loadCapacity',loadCapacity);
       formData.append('material',material);
       formData.append('quantity',quantity);
-
       formData.append('manufactureMonth',manufactureMonth);
       formData.append('manufactureYear',manufactureYear);
       // formData.append('seasons', seasons.map(option => option.value).join(',')); 
@@ -314,7 +363,7 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
         formData.append('thumb6', file); 
       });
 
-      const response = await fetch('http://localhost:8000/add-tyre', {
+      const response = await fetch(`${url.nodeapipath}/add-tyre`, {
         method: 'POST',
         body: formData,
       });
@@ -333,8 +382,99 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
     }
   };
 
+// -------------------- Truck Brand / Truck Model ----------------------------
+  
+// Fetch truck brands
+useEffect(() => {
+  const fetchTruckBrands = async () => {
+    try {
+      const response = await axios.get(`${url.nodeapipath}/get-truckbrand`);
+      const activeTruckBrands = response.data.filter(brand => brand.active);
+      setTruckBrands(activeTruckBrands.map(brand => ({ label: brand.name, value: brand._id })));
+    } catch (error) {
+      console.error('Error fetching truck brands:', error);
+    }
+  };
+
+  fetchTruckBrands();
+}, []);
+
+// Fetch truck models based on selected truck brands
+useEffect(() => {
+  const fetchTruckModels = async () => {
+    if (selectedTruckBrands.length > 0) {
+      try {
+        const selectedBrandIds = selectedTruckBrands.map(option => option.value);
+        const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
+        const response = await axios.get(`${url.nodeapipath}/get-truckmodel?${query}`);
+        const activeModels = response.data.filter(model => model.active);
+        setTruckModels(activeModels.map(model => ({
+          value: model._id,
+          label: model.name,
+        })));
+      } catch (error) {
+        console.error('Error fetching truck models:', error);
+      }
+    } else {
+      setTruckModels([]);
+    }
+  };
+
+  fetchTruckModels();
+}, [selectedTruckBrands]);
 
 
+
+// ---------------------------Tractor brand / model ----------------------------
+
+// Fetch tractor brands
+useEffect(() => {
+  const fetchTractorBrands = async () => {
+    try {
+      const response = await axios.get(`${url.nodeapipath}/get-tractorbrand`);
+      const activeTractorBrands = response.data.filter(brand => brand.active);
+      setTractorBrands(activeTractorBrands.map(brand => ({ label: brand.name, value: brand._id })));
+    } catch (error) {
+      console.error('Error fetching tractor brands:', error);
+    }
+  };
+
+  fetchTractorBrands();
+}, []);
+
+// Fetch tractor models based on selected tractor brands
+useEffect(() => {
+  const fetchTractorModels = async () => {
+    if (selectedTractorBrands.length > 0) {
+      try {
+        const selectedBrandIds = selectedTractorBrands.map(option => option.value);
+        const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
+        const response = await axios.get(`${url.nodeapipath}/get-tractormodel?${query}`);
+        const activeModels = response.data.filter(model => model.active);
+        setTractorModels(activeModels.map(model => ({
+          value: model._id,
+          label: model.name,
+        })));
+      } catch (error) {
+        console.error('Error fetching tractor models:', error);
+      }
+    } else {
+      setTractorModels([]);
+    }
+  };
+
+  fetchTractorModels();
+}, [selectedTractorBrands]);
+
+// Handle tractor brand selection change
+const handleTractorBrandsChange = (selectedOptions) => {
+  setSelectedTractorBrands(selectedOptions);
+};
+
+// Handle tractor model selection change
+const handleTractorModelsChange = (selectedOptions) => {
+  setSelectedTractorModels(selectedOptions);
+};
  
 //  ------------------------------ Car Brand / car Model -----------------------
 
@@ -342,7 +482,7 @@ const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
 useEffect(() => {
   const fetchCarBrands = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/get-carbrand');
+      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
       const activeCarBrands = response.data.filter(brand => brand.active);
       setCarBrands(activeCarBrands.map(brand => ({ label: brand.name, value: brand._id })));
     } catch (error) {
@@ -362,7 +502,7 @@ useEffect(() => {
         const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
         console.log('Fetching models for brand IDs:', selectedBrandIds); // Debugging log
 
-        const response = await axios.get(`http://localhost:8000/get-carmodel?${query}`);
+        const response = await axios.get(`${url.nodeapipath}/get-carmodel?${query}`);
         const activeModels = response.data.filter(model => model.active);
 
         console.log('Fetched car models:', activeModels); // Debugging log
@@ -401,7 +541,7 @@ const handleCarModelsChange = (selectedOptions) => {
   useEffect(() => {
     const fetchBikeBrands = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/get-bikebrand');
+        const response = await axios.get(`${url.nodeapipath}/get-bikebrand`);
         const activeBikeBrands = response.data.filter(brand => brand.active);
         setBikeBrands(activeBikeBrands.map(brand => ({ label: brand.name, value: brand._id })));
       } catch (error) {
@@ -420,7 +560,7 @@ const handleCarModelsChange = (selectedOptions) => {
           const selectedBrandIds = selectedBikeBrands.map(option => option.value);
           const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
 
-          const response = await axios.get(`http://localhost:8000/get-bikemodel?${query}`);
+          const response = await axios.get(`${url.nodeapipath}/get-bikemodel?${query}`);
           const activeModels = response.data.filter(model => model.active);
 
           setBikeModels(activeModels.map(model => ({
@@ -485,7 +625,22 @@ const handleCarModelsChange = (selectedOptions) => {
   };
 
 
+// Function to generate slug
+const generateSlug = (text) => {
+  return text
+    .toLowerCase() // Convert to lowercase
+    .replace(/[^a-z0-9\s-]/g, '') // Remove invalid characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-'); // Remove consecutive hyphens
+};
 
+
+// Handle input change
+const handleInputslug = (e) => {
+  const inputValue = e.target.value;
+  const slugifiedValue = generateSlug(inputValue);
+  setSlug(slugifiedValue); // Update the slug
+};
 
   return (
     
@@ -719,12 +874,23 @@ const handleCarModelsChange = (selectedOptions) => {
                           <input type="text" value={title} onChange={(event) => setTitle(event.target.value)} className="form-control slug-title" id="inputEmail4"/>
                                               
                         </div>
-                        <div className="col-md-12">
-                          <label for="slug" className="col-12 col-form-label">Slug</label> 
-                          <div className="col-12">
-                            <input id="slug" name="slug" className="form-control here set-slug" type="text"/>
-                          </div>
-                        </div>
+
+
+<div className="col-md-12">
+      <label htmlFor="slug" className="col-12 col-form-label">Slug</label>
+      <div className="col-12">
+        <input
+          id="slug"
+          name="slug"
+          className="form-control here set-slug"
+          type="text"
+          value={slug}
+          onChange={handleInputslug}
+        />
+      </div>
+    </div>
+
+
                         <div className="col-md-12">
                           <label className="form-label">Sort Description</label>
                           <textarea  value={description} onChange={(event) => setDescription(event.target.value)} className="form-control" rows="2"></textarea>
@@ -948,6 +1114,17 @@ const handleCarModelsChange = (selectedOptions) => {
                             <input type="radio" value="bike" name="size1" checked={tyreType === 'bike'} onChange={(event) => setTyreType(event.target.value)} />
                               <label>Bike</label>
                             </div>
+
+
+                            <div className="form-check form-check-inline">
+                              <input type="radio" value="truck" name="tyreType" checked={tyreType === 'truck'} onChange={(event) => setTyreType(event.target.value)} />
+                              <label>Truck</label>
+                            </div>
+
+                            <div className="form-check form-check-inline">
+      <input type="radio" value="tractor" name="tyreType" checked={tyreType === 'tractor'} onChange={(event) => setTyreType(event.target.value)} />
+      <label>Tractor</label>
+    </div>
                            
                           </div>
                         </div>
@@ -1009,24 +1186,96 @@ const handleCarModelsChange = (selectedOptions) => {
                         </div>
                       </div>
 
-                        <div className="col-md-12 mt-5 mb-25">
-                          <label className="form-label">Tyre Type</label>
-                          <div className="form-checkbox-box">
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value={fronttyre} onChange={(event) => setFronttyre(event.target.value)} className="form-input" />
-                              <label>Front Tyre</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value={reartyre} onChange={(event) => setRearTyre(event.target.value)} className="form-input" />
-                              <label>Rear Tyre</label>
-                            </div>
-                           
-                          </div>
-                        </div>
+          
+
+<div className="col-md-12 mt-5 mb-25">
+    <label className="form-label">Tyre Type</label>
+    <div className="form-checkbox-box">
+        <div className="form-check form-check-inline">
+            <input
+                type="radio"
+                value="Front Tyre"  // Set the value as "Front Tyre"
+                onChange={(event) => setFronttyre(event.target.value)}  // Set the selected value in state
+                checked={fronttyre === "Front Tyre"}  // Ensure the radio button is selected based on state
+                className="form-input"
+            />
+            <label>Front Tyre</label>
+        </div>
+        <div className="form-check form-check-inline">
+            <input
+                type="radio"
+                value="Rear Tyre"  // Set the value as "Rear Tyre"
+                onChange={(event) => setRearTyre(event.target.value)}  // Set the selected value in state
+                checked={reartyre === "Rear Tyre"}  // Ensure the radio button is selected based on state
+                className="form-input"
+            />
+            <label>Rear Tyre</label>
+        </div>
+    </div>
+</div>
+
 
                         </>
                         )}  
+
+
+{tyreType === 'truck' && (
+                          <>
+                            <div className="col-md-12">
+                              <label className="form-label">Truck Brand</label>
+                              <Select
+  isMulti
+  options={truckBrands} // Assuming truckBrands is an array of options
+  value={selectedTruckBrands} // State for selected truck brands
+  onChange={setSelectedTruckBrands} // Function to update state
+  className="form-input"
+/>
+                            </div>
+
+                            <div className="col-md-12">
+                              <label className="form-label">Truck Model</label>
+                              
+                              
+<Select
+  isMulti
+  options={truckModels} // Assuming truckModels is an array of options
+  value={selectedTruckModels} // State for selected truck models
+  onChange={setSelectedTruckModels} // Function to update state
+  className="form-input"
+/>
+                            </div>
+                          </>
+                        )}
+
+
+{tyreType === 'tractor' && (
+  <div>
+    <div className="col-md-12">
+      <label className="form-label">Tractor Brand</label>
+      <Select
+        isMulti
+        options={tractorBrands}
+        value={selectedTractorBrands}
+        onChange={handleTractorBrandsChange}
+        className="form-input"
+      />
+    </div>
+    <div className="col-md-12">
+      <label className="form-label">Tractor Model</label>
+      <Select
+        isMulti
+        options={tractorModels}
+        value={selectedTractorModels}
+        onChange={handleTractorModelsChange}
+        className="form-input"
+      />
+    </div>
+  </div>
+)}                
+
+
                         <hr/>
+
 
     <div>
       <label>
@@ -1134,10 +1383,6 @@ const handleCarModelsChange = (selectedOptions) => {
 };
 
 export default AddTyreForm;
-
-
-
-
 
 
 

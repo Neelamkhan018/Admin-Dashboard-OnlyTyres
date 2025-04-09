@@ -1,54 +1,54 @@
-
-
 import React, { useState, useEffect } from 'react';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
-import Sidebar from '../Siderbar/Sidebar';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import Sidebar from '../Siderbar/Sidebar';
 
 
 import url from "../../env.js"
 
 
-export default function CarModelEdit() {
-  const { id } = useParams();
-  const navigate = useNavigate();
 
+export default function TractorEdit() {
+  const { id } = useParams(); 
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
     description: '',
-    image: [],
+    image: [], 
   });
-
   const [imagePreviews, setImagePreviews] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true); 
 
+  // Fetch tractor brand details for editing
   useEffect(() => {
-    const fetchCarModelDetails = async () => {
+    const fetchTractorBrandDetails = async () => {
       try {
-        const response = await axios.get(`${url.nodeapipath}/get-carmodel/${id}`);
-        const model = response.data;
+        const response = await fetch(`${url.nodeapipath}/get-Tractorbrand/${id}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const brand = await response.json();
 
         setFormData({
-          name: model.name || '',
-          slug: model.slug || '',
-          description: model.description || '',
-          image: [],
+          name: brand.name || '',
+          slug: brand.slug || '',
+          description: brand.description || '',
+          image: [], // Initialize empty array for new images
         });
 
-        setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
       } catch (error) {
-        setError('Error fetching car model details. Please try again later.');
-        console.error('Error fetching car model details:', error);
+        setError('Error fetching tractor brand details. Please try again later.');
+        console.error('Error fetching tractor brand details:', error);
       } finally {
-        setLoading(false);
+        setLoading(false); 
       }
     };
 
-    fetchCarModelDetails();
+    fetchTractorBrandDetails();
   }, [id]);
 
   const handleChange = (e) => {
@@ -57,13 +57,13 @@ export default function CarModelEdit() {
       const selectedImages = Array.from(files);
       setFormData(prevFormData => ({
         ...prevFormData,
-        image: selectedImages
+        image: selectedImages,
       }));
       setImagePreviews(selectedImages.map(file => URL.createObjectURL(file)));
     } else {
       setFormData(prevFormData => ({
         ...prevFormData,
-        [name]: value
+        [name]: value,
       }));
     }
   };
@@ -71,29 +71,40 @@ export default function CarModelEdit() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append('name', formData.name);
-    data.append('slug', formData.slug);
-    data.append('description', formData.description);
-    formData.image.forEach(file => data.append('image', file));
+    const formDataToSend = new FormData();
+    formDataToSend.append('name', formData.name);
+    formDataToSend.append('slug', formData.slug);
+    formDataToSend.append('description', formData.description);
+    formData.image.forEach((file) => {
+      formDataToSend.append('image', file);
+    });
 
     try {
-      const response = await axios.put(`${url.nodeapipath}/update-carmodel/${id}`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await fetch(`${url.nodeapipath}/Tractor-update/${id}`, {
+        method: 'PUT',
+        body: formDataToSend,
       });
 
-      console.log('Update successful:', response.data);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
-      navigate('/carbrand-model');
+      const data = await response.json();
+      console.log('Update successful:', data);
+
+      // Update image previews if new images were uploaded
+      if (data.image && Array.isArray(data.image)) {
+        setImagePreviews(data.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+      }
+
+      navigate('/Tractorbrand'); // Redirect to the tractor brand list
     } catch (error) {
-      console.error('Error updating car model:', error);
+      console.error('Error updating tractor brand:', error);
     }
   };
 
   return (
-    <div className="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
+    <body className="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
       <div className="wrapper">
         <Sidebar />
         <div className="ec-page-wrapper">
@@ -101,18 +112,18 @@ export default function CarModelEdit() {
           <div className="ec-content-wrapper">
             <div className="content">
               <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-                <h1>Edit Car Model</h1>
+                <h1>Edit Tractor Brand Category</h1>
                 <p className="breadcrumbs">
                   <span><a href="#">Home</a></span>
-                  <span><i className="mdi mdi-chevron-right"></i></span>Edit Car Model
+                  <span><i className="mdi mdi-chevron-right"></i></span>Edit Tractor Brand Category
                 </p>
               </div>
               <div className="row">
-                <div className="col-xl-4 col-lg-12">
+                <div className="col-xl-8 col-lg-12">
                   <div className="ec-cat-list card card-default mb-24px">
                     <div className="card-body">
                       <div className="ec-cat-form ec-vendor-uploads">
-                        <h4>Edit Model</h4>
+                        <h4>Edit Category</h4>
                         {error && <p className="text-danger">{error}</p>}
                         {!error && (
                           <form onSubmit={handleSubmit}>
@@ -172,9 +183,9 @@ export default function CarModelEdit() {
                                   multiple
                                   onChange={handleChange}
                                 />
-                                <div className="image-previews mt-3">
+                                <div className="image-previews">
                                   {imagePreviews.map((url, idx) => (
-                                    <img key={idx} src={url} alt="preview" className="preview-img img-thumbnail" />
+                                    <img key={idx} src={url} alt="preview" className="preview-img" />
                                   ))}
                                 </div>
                               </div>
@@ -182,7 +193,7 @@ export default function CarModelEdit() {
 
                             <div className="row">
                               <div className="col-12">
-                                <button type="submit" className="btn btn-primary">Update Model</button>
+                                <button type="submit" className="btn btn-primary">Update Category</button>
                               </div>
                             </div>
                           </form>
@@ -197,20 +208,6 @@ export default function CarModelEdit() {
           </div>
         </div>
       </div>
-    </div>
+    </body>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

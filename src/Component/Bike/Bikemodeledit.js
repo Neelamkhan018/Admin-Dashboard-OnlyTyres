@@ -7,6 +7,10 @@ import Sidebar from '../Siderbar/Sidebar';
 import Footer from '../Footer/Footer';
 import axios from 'axios';
 
+
+import url from "../../env.js"
+
+
 const BikeModelEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,7 +27,7 @@ const BikeModelEdit = () => {
   useEffect(() => {
     const fetchBikeModelDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/get-bikemodel/${id}`);
+        const response = await axios.get(`${url.nodeapipath}/get-bikemodel/${id}`);
         const model = response.data;
 
         setFormData({
@@ -33,7 +37,7 @@ const BikeModelEdit = () => {
           image: model.image || [],
         });
 
-        setImagePreviews(model.image.map(img => `http://localhost:8000/uploads/${img}`));
+        setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
       } catch (error) {
         console.error('Error details:', error.response || error.message || error);
         setError('Error fetching bike model details. Please try again later.');
@@ -75,7 +79,7 @@ const BikeModelEdit = () => {
     });
 
     try {
-      const response = await axios.put(`http://localhost:8000/update-bikemodel/${id}`, formDataToSend, {
+      const response = await axios.put(`${url.nodeapipath}/update-bikemodel/${id}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

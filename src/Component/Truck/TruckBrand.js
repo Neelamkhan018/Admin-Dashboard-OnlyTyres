@@ -1,25 +1,21 @@
-
-
 import React, { useState, useEffect } from 'react';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
-import Sidebar from '../Siderbar/Sidebar';
+
 import axios from 'axios';  
 import { Link, useNavigate } from 'react-router-dom';
+import Sidebar from '../Siderbar/Sidebar';
+
 
 
 import url from "../../env.js"
 
 
-export default function Carbrand() {
-  const [carBrands, setCarBrands] = useState([]);
-  const [error, setError] = useState('');
-
-  
-
-  const navigate = useNavigate()
+export default function TruckBrand() {
 
 
+
+const navigate = useNavigate()
 
   useEffect(() => {
     // Check if the user navigated directly to this page
@@ -34,6 +30,9 @@ export default function Carbrand() {
 
 
 
+  const [truckBrands, setTruckBrands] = useState([]);
+  const [error, setError] = useState('');
+ 
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -42,49 +41,42 @@ export default function Carbrand() {
   });
   const [imagePreviews, setImagePreviews] = useState([]);
 
- 
+  // Fetch truck brands on component load
+  useEffect(() => {
+    fetchTruckBrands();
+  }, []);
 
-  
-useEffect(() => {
-  const fetchCarBrands = async () => {
+
+  useEffect(() => {
+    const fetchTruckBrands = async () => {
+        try {
+          const response = await axios.get(`${url.nodeapipath}/get-Truckbrands-with-model-counts`); // Use the endpoint that includes model counts
+          setTruckBrands(response.data);
+        } catch (error) {
+          console.error('Error fetching truck brands:', error);
+        }
+      };
+
+      fetchTruckBrands()
+  }, []);
+
+  const fetchTruckBrands = async () => {
     try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrands-with-model-counts`);
-      setCarBrands(response.data);
+      const response = await axios.get(`${url.nodeapipath}/get-Truckbrand`);
+      setTruckBrands(response.data);
     } catch (error) {
-      console.error('Error fetching car brands:', error);
+      console.error('Error fetching truck brands:', error);
     }
   };
 
-  fetchCarBrands();
-}, []);
-
-
- // Fetch car brands on component load
- useEffect(() => {
-  fetchCarBrands();
-}, []);
-
-
-
-  // Function to fetch car brands
-  const fetchCarBrands = async () => {
+  // Function to delete a truck brand
+  const deleteTruckBrand = async (id) => {
     try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
-      console.log('Fetched car brands:', response.data); // Log fetched data
-      setCarBrands(response.data);
+      await axios.delete(`${url.nodeapipath}/Truck-delete/${id}`);
+      console.log('Deleted truck brand with id:', id);
+      fetchTruckBrands(); // Refresh the truck brand list after deletion
     } catch (error) {
-      console.error('Error fetching car brands:', error);
-    }
-  };
-
-  // Function to delete a car brand
-  const deleteCarBrand = async (id) => {
-    try {
-      await axios.delete(`${url.nodeapipath}/car-delete/${id}`);
-      console.log('Deleted car brand with id:', id); // Log delete action
-      fetchCarBrands(); // Refresh the car brand list after deletion
-    } catch (error) {
-      console.error('Error deleting car brand:', error);
+      console.error('Error deleting truck brand:', error);
     }
   };
 
@@ -100,7 +92,7 @@ useEffect(() => {
     }
   };
 
-  // Handle form submission to add a car brand
+  // Handle form submission to add a truck brand
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -112,14 +104,14 @@ useEffect(() => {
     }
 
     try {
-      await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
+      await axios.post(`${url.nodeapipath}/add-Truckbrand`, form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      console.log('Added new car brand:', formData); // Log form data
-      fetchCarBrands(); // Refresh the car brand list after adding
+      console.log('Added new truck brand:', formData);
+      fetchTruckBrands(); // Refresh the truck brand list after adding
       resetForm(); // Reset the form
     } catch (error) {
-      console.error('Error adding car brand:', error);
+      console.error('Error adding truck brand:', error);
     }
   };
 
@@ -135,24 +127,22 @@ useEffect(() => {
   };
 
   // Toggle active status
- 
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`${url.nodeapipath}/active-carbrand/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-Truckbrand/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ active: newStatus }),
       });
-  
+
       if (response.ok) {
-        setCarBrands((prevBrands) =>
+        setTruckBrands((prevBrands) =>
           prevBrands.map((brand) =>
             brand._id === id ? { ...brand, active: newStatus } : brand
           )
         );
-        
       } else {
         const errorText = await response.text();
         setError(`Failed to update brand status: ${errorText}`);
@@ -171,19 +161,19 @@ useEffect(() => {
           <div className="ec-content-wrapper">
             <div className="content">
               <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-                <h1>Car Brand Category</h1>
+                <h1>Truck Brand Category</h1>
                 <p className="breadcrumbs">
                   <span><a href="#">Home</a></span>
-                  <span><i className="mdi mdi-chevron-right"></i></span>Car Brand Category
+                  <span><i className="mdi mdi-chevron-right"></i></span>Truck Brand Category
                 </p>
               </div>
               <div className="row">
-                {/* Form to Add a Car Brand */}
+                {/* Form to Add a Truck Brand */}
                 <div className="col-xl-4 col-lg-12">
                   <div className="ec-cat-list card card-default mb-24px">
                     <div className="card-body">
                       <div className="ec-cat-form ec-vendor-uploads">
-                        <h4>Add Category</h4>
+                        <h4>Add Truck Brand</h4>
                         <form onSubmit={handleSubmit}>
                           <div className="form-group row">
                             <label htmlFor="name" className="col-12 col-form-label">Name</label>
@@ -260,7 +250,7 @@ useEffect(() => {
                   </div>
                 </div>
 
-                {/* Table to Display Car Brands */}
+                {/* Table to Display Truck Brands */}
                 <div className="col-xl-8 col-lg-12">
                   <div className="ec-cat-list card card-default">
                     <div className="card-body">
@@ -278,48 +268,44 @@ useEffect(() => {
                             </tr>
                           </thead>
                           <tbody>
-                            {carBrands.map((brand) => (
+                            {truckBrands.map((brand) => (
                               <tr key={brand._id}>
-                               
-
-    <td className="table-cell">
-                {brand.image.map((item, idx) => (
-                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
-                ))}
-              </td>
+                                <td className="table-cell">
+                                  {brand.image.map((item, idx) => (
+                                    <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                                  ))}
+                                </td>
                                 <td>{brand.name}</td>
                                 <td>{brand.modelCount}</td>
                                 <td>{brand.product}</td>
                                 <td>{brand.Totalsell}</td>
                                 <td>
-                              <input
-                                type="checkbox"
-                                checked={brand.active}
-                                onChange={() => handleToggleActive(brand._id, !brand.active)}
-                              />
-                            </td>
+                                  <input
+                                    type="checkbox"
+                                    checked={brand.active}
+                                    onChange={() => handleToggleActive(brand._id, !brand.active)}
+                                  />
+                                </td>
                                 <td>
                                   <div className="btn-group">
                                     <Link 
-                                       to={`/caredit/${brand._id}`} 
+                                       to={`/truckedit/${brand._id}`} 
                                       className="btn btn-outline-success"
                                     >
                                       Edit
                                     </Link>
-                                    <button
 
-                                   
-                                      onClick={()=>{navigate("/carbrand-model",{state:{brandid:brand._id}})}}
-                                       
-                                      
+                                   <button
+                                      onClick={()=>{navigate("/Truckmodel",{state:{brandid:brand._id}})}}                                   
                                       className="btn btn-outline-success"
                                     >
                                       Add Model
                                     </button>
 
+
                                     <button
                                       type="button"
-                                      onClick={() => deleteCarBrand(brand._id)}
+                                      onClick={() => deleteTruckBrand(brand._id)}
                                       className="btn btn-outline-danger"
                                     >
                                       Delete

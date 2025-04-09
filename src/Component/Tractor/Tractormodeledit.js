@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import Footer from '../Footer/Footer';
 import Navbar from '../Navbar/Navbar';
@@ -11,7 +9,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import url from "../../env.js"
 
 
-export default function CarModelEdit() {
+
+export default function TractorModelEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -27,9 +26,9 @@ export default function CarModelEdit() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchCarModelDetails = async () => {
+    const fetchTractorModelDetails = async () => {
       try {
-        const response = await axios.get(`${url.nodeapipath}/get-carmodel/${id}`);
+        const response = await axios.get(`${url.nodeapipath}/get-Tractormodel/${id}`);
         const model = response.data;
 
         setFormData({
@@ -41,14 +40,14 @@ export default function CarModelEdit() {
 
         setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
       } catch (error) {
-        setError('Error fetching car model details. Please try again later.');
-        console.error('Error fetching car model details:', error);
+        setError('Error fetching tractor model details. Please try again later.');
+        console.error('Error fetching tractor model details:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCarModelDetails();
+    fetchTractorModelDetails();
   }, [id]);
 
   const handleChange = (e) => {
@@ -78,7 +77,7 @@ export default function CarModelEdit() {
     formData.image.forEach(file => data.append('image', file));
 
     try {
-      const response = await axios.put(`${url.nodeapipath}/update-carmodel/${id}`, data, {
+      const response = await axios.put(`${url.nodeapipath}/update-Tractormodel/${id}`, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -86,9 +85,9 @@ export default function CarModelEdit() {
 
       console.log('Update successful:', response.data);
 
-      navigate('/carbrand-model');
+      navigate('/Tractormodel'); // Redirect to the tractor model list
     } catch (error) {
-      console.error('Error updating car model:', error);
+      console.error('Error updating tractor model:', error);
     }
   };
 
@@ -101,10 +100,10 @@ export default function CarModelEdit() {
           <div className="ec-content-wrapper">
             <div className="content">
               <div className="breadcrumb-wrapper breadcrumb-wrapper-2 breadcrumb-contacts">
-                <h1>Edit Car Model</h1>
+                <h1>Edit Tractor Model</h1>
                 <p className="breadcrumbs">
                   <span><a href="#">Home</a></span>
-                  <span><i className="mdi mdi-chevron-right"></i></span>Edit Car Model
+                  <span><i className="mdi mdi-chevron-right"></i></span>Edit Tractor Model
                 </p>
               </div>
               <div className="row">
@@ -200,17 +199,3 @@ export default function CarModelEdit() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

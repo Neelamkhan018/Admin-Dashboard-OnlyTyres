@@ -1,49 +1,118 @@
 
-import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import Footer from '../Footer/Footer';
-import Navbar from '../Navbar/Navbar';
-import Sidebar from '../Siderbar/Sidebar';
+
+
+
+
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Footer from "../Footer/Footer";
+import Navbar from "../Navbar/Navbar";
+import Sidebar from "../Siderbar/Sidebar";
+
+import url from "../../env.js"
 
 const AddDealerList = () => {
   const { state } = useLocation();
-  const [dealerList, setDealerList] = useState(state?.dealerList || []);
+  const [dealerList, setDealerList] = useState([]);
   const [prices, setPrices] = useState({});
   const [alignments, setAlignments] = useState({});
-  const [tyreBrands, setTyreBrands] = useState(state?.tyreBrands || {});
+  const [tyreBrands, setTyreBrands] = useState({});
 
-  // Retrieve dealerList, prices, and alignments from local storage when the component mounts
+  const navigate = useNavigate();
+
+
+      useEffect(() => {
+        // Check if the user navigated directly to this page
+        if (document.referrer === '') {
+            // If the referrer is empty, redirect to home or another page
+            navigate('/');
+        }
+    }, [navigate]);
+    
+
   useEffect(() => {
-    const savedDealerList = localStorage.getItem('dealerList');
-    const savedPrices = localStorage.getItem('prices');
-    const savedAlignments = localStorage.getItem('alignments');
-
-    if (savedDealerList) {
-      setDealerList(JSON.parse(savedDealerList));
-    }
-    if (savedPrices) {
-      setPrices(JSON.parse(savedPrices));
-    }
-    if (savedAlignments) {
-      setAlignments(JSON.parse(savedAlignments));
-    }
+    const loggedInDealerId = localStorage.getItem("clientId");
+  
+    // Retrieve dealer list
+    const storedDealerLists = JSON.parse(localStorage.getItem("dealerLists")) || {};
+    setDealerList(storedDealerLists[loggedInDealerId] || []);
+  
+    // Retrieve dealer-specific prices
+    const dealerPrices = JSON.parse(localStorage.getItem(`dealerPrices_${loggedInDealerId}`)) || {};
+    setPrices(dealerPrices);
+  
+    // Fetch tyre brand names from API
+    fetch(`${url.nodeapipath}/get-tyre-brands`)
+      .then((response) => response.json())
+      .then((data) => {
+        const brandMapping = {};
+        data.forEach((brand) => {
+          brandMapping[brand._id] = brand.name; // Map ID to name
+        });
+        setTyreBrands(brandMapping);
+      })
+      .catch((error) => console.error("Error fetching tyre brands:", error));
+  
+    // Load fitting alignments for this dealer only
+    const savedAlignments = JSON.parse(localStorage.getItem(`fittingAlignments_${loggedInDealerId}`)) || {};
+    setAlignments(savedAlignments);
   }, []);
+  
+  
 
-  const handlePriceChange = (id, value) => {
-    setPrices((prev) => {
-      const updatedPrices = { ...prev, [id]: value };
-      localStorage.setItem('prices', JSON.stringify(updatedPrices));
-      return updatedPrices;
-    });
+  const handlePriceChange = async (id, value) => {
+    const loggedInDealerId = localStorage.getItem("clientId");
+    const newPrice = value.replace(/\D/g, ""); // Remove non-numeric characters
+  
+    // Update state locally
+    const newPrices = { ...prices, [id]: newPrice };
+    setPrices(newPrices);
+  
+    // Store in localStorage for persistence
+    localStorage.setItem(`dealerPrices_${loggedInDealerId}`, JSON.stringify(newPrices));
+  
+    // Send the updated price to the backend API
+    try {
+      const response = await fetch(`${url.nodeapipath}/add-dealer-price`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          clientId: loggedInDealerId,
+          tyreId: id,
+          price: newPrice,
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Dealer price updated:", data);
+      } else {
+        console.error("Error updating dealer price:", data.message);
+      }
+    } catch (error) {
+      console.error("Failed to update dealer price:", error);
+    }
   };
+  
 
+ 
   const handleAlignmentChange = (id) => {
-    setAlignments((prev) => {
-      const updatedAlignments = { ...prev, [id]: !prev[id] };
-      localStorage.setItem('alignments', JSON.stringify(updatedAlignments));
-      return updatedAlignments;
-    });
+    const loggedInDealerId = localStorage.getItem("clientId");
+  
+    // Get the dealer's stored alignments
+    const storedAlignments = JSON.parse(localStorage.getItem(`fittingAlignments_${loggedInDealerId}`)) || {};
+  
+    // Update the specific dealer's alignments
+    const newAlignments = { ...storedAlignments, [id]: !storedAlignments[id] };
+    setAlignments(newAlignments);
+  
+    // Save updated alignments for this dealer only
+    localStorage.setItem(`fittingAlignments_${loggedInDealerId}`, JSON.stringify(newAlignments));
   };
+  
+
 
   return (
     <div className="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">
@@ -57,8 +126,13 @@ const AddDealerList = () => {
                 <div>
                   <h1>Dealer List</h1>
                   <p className="breadcrumbs">
-                    <span><Link to="/">Home</Link></span>
-                    <span><i className="mdi mdi-chevron-right"></i></span> Dealer List
+                    <span>
+                      <Link to="/">Home</Link>
+                    </span>
+                    <span>
+                      <i className="mdi mdi-chevron-right"></i>
+                    </span>{" "}
+                    Dealer List
                   </p>
                 </div>
               </div>
@@ -68,7 +142,7 @@ const AddDealerList = () => {
                   <div className="card card-default">
                     <div className="card-body">
                       <div className="table-responsive">
-                        <table id="responsive-data-table" className="table" style={{ width: '100%' }}>
+                        <table id="responsive-data-table" className="table" style={{ width: "100%" }}>
                           <thead>
                             <tr>
                               <th>Image</th>
@@ -88,40 +162,57 @@ const AddDealerList = () => {
                                   <td>
                                     {tyre.avatarImages && (
                                       <img
-                                        src={`http://localhost:8000/uploads/${tyre.avatarImages}`}
-                                        alt="Avatar"
+                                        src={`${url.nodeapipath}/uploads/${tyre.avatarImages}`}
+                                        alt="Tyre"
                                         className="tbl-thumb"
+                                        style={{ width: "80px", height: "auto" }}
                                       />
                                     )}
                                   </td>
                                   <td>{tyre.title}</td>
                                   <td>{tyre.tyreType}</td>
-                                  <td>{tyreBrands[tyre.tyreBrand] || 'Unknown Brand'}</td> {/* Use tyreBrands to get the name */}
-                                  <td>₹{tyre.price}</td>
-                                  <td>₹{tyre.Salesprice}</td>
+                                  <td>{tyreBrands[tyre.tyreBrand] || "Unknown Brand"}</td>
+                                  <td>₹{tyre.price?.toLocaleString()}</td>
+                                  <td>₹{tyre.Salesprice?.toLocaleString()}</td>
                                   <td>
                                     <input
                                       type="text"
-                                      placeholder="Enter your price"
+                                      placeholder="Enter price"
                                       className="form-control"
-                                      style={{ width: '120px' }}
-                                      value={prices[tyre._id] || ''}
+                                      value={prices[tyre._id] || ""}
                                       onChange={(e) => handlePriceChange(tyre._id, e.target.value)}
+                                      style={{ width: "120px" }}
                                     />
                                   </td>
-                                  <td>
-                                    <input
-                                      type="checkbox"
-                                      className="form-check-input"
-                                      checked={alignments[tyre._id] || false}
-                                      onChange={() => handleAlignmentChange(tyre._id)}
-                                    />
-                                  </td>
+                                  {/* <td>
+                                    <div className="form-check">
+                                      <input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        checked={alignments[tyre._id] || false}
+                                        onChange={() => handleAlignmentChange(tyre._id)}
+                                      />
+                                    </div>
+                                  </td> */}
+
+<td>
+  <div className="form-check">
+    <input
+      type="checkbox"
+      className="form-check-input"
+      checked={alignments[tyre._id] || false}
+      onChange={() => handleAlignmentChange(tyre._id)}
+    />
+  </div>
+</td>
+
                                 </tr>
                               ))
                             ) : (
                               <tr>
-                                <td colSpan="8">No items added to the dealer list yet.</td>
+                                <td colSpan="8" className="text-center py-4">
+                                  No items in dealer list. Go back to select tyres.
+                                </td>
                               </tr>
                             )}
                           </tbody>
@@ -141,3 +232,14 @@ const AddDealerList = () => {
 };
 
 export default AddDealerList;
+
+
+
+
+
+
+
+
+
+
+

@@ -5,6 +5,10 @@ import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../Siderbar/Sidebar';
 
+
+import url from "../../env.js"
+
+
 export default function BikebrandEdit() {
   const { id } = useParams(); 
   const navigate = useNavigate(); 
@@ -21,7 +25,7 @@ export default function BikebrandEdit() {
   useEffect(() => {
     const fetchBikeBrandDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/get-bikebrand/${id}`);
+        const response = await axios.get(`${url.nodeapipath}/get-bikebrand/${id}`);
         const brand = response.data;
 
         setFormData({
@@ -31,7 +35,7 @@ export default function BikebrandEdit() {
           image: [], 
         });
 
-        setImagePreviews(brand.image.map(img => `http://localhost:8000/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
       } catch (error) {
         setError('Error fetching bike brand details. Please try again later.');
         console.error('Error fetching bike brand details:', error);
@@ -72,7 +76,7 @@ export default function BikebrandEdit() {
     });
 
     try {
-      const response = await fetch(`http://localhost:8000/update-bikebrand/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/update-bikebrand/${id}`, {
         method: 'PUT',
         body: formDataToSend, 
       });

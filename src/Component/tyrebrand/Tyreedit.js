@@ -8,6 +8,11 @@ import Footer from '../Footer/Footer';
 import axios from 'axios';
 import Sidebar from '../Siderbar/Sidebar';
 
+
+import url from "../../env.js"
+
+
+
 const TyreEdit = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -26,7 +31,7 @@ const TyreEdit = () => {
   useEffect(() => {
     const fetchBrand = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/get-tyre-brand/${id}`);
+        const response = await axios.get(`${url.nodeapipath}/get-tyre-brand/${id}`);
         const data = response.data;
 
         setFormData({
@@ -36,7 +41,7 @@ const TyreEdit = () => {
           image: data.image,
         });
 
-        setImagePreviews(data.image.map(file => `http://localhost:8000/uploads/${file}`));
+        setImagePreviews(data.image.map(file => `${url.nodeapipath}/uploads/${file}`));
       } catch (error) {
         console.error('Error fetching tyre brand:', error);
         setError('Failed to load tyre brand. Please try again later.');
@@ -76,7 +81,7 @@ const TyreEdit = () => {
         formDataToSend.append('image', file);
       });
 
-      const response = await axios.put(`http://localhost:8000/update-tyre-brand/${id}`, formDataToSend, {
+      const response = await axios.put(`${url.nodeapipath}/update-tyre-brand/${id}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

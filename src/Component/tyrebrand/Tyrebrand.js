@@ -7,7 +7,29 @@ import Footer from '../Footer/Footer';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+
+import url from "../../env.js"
+
+
+
 const Tyrebrand = () => {
+
+
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the user navigated directly to this page
+    if (document.referrer === '') {
+        // If the referrer is empty, redirect to home or another page
+        navigate('/');
+    }
+}, [navigate]);
+
+
+
+
   const [brands, setBrands] = useState([]);
   const [name, setName] = useState('');
   const [slug, setSlug] = useState('');
@@ -19,7 +41,7 @@ const Tyrebrand = () => {
  
 
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -32,7 +54,7 @@ const Tyrebrand = () => {
   const fetchBrands = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await fetch('http://localhost:8000/get-tyre-brands');
+      const response = await fetch(`${url.nodeapipath}/get-tyre-brands`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -61,7 +83,7 @@ const Tyrebrand = () => {
     }
 
     try {
-      await axios.post('http://localhost:8000/add-tyre-brand', form, {
+      await axios.post(`${url.nodeapipath}/add-tyre-brand`, form, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       console.log('Added new car brand:', formData); // Log form data
@@ -88,7 +110,7 @@ const Tyrebrand = () => {
   // Handle brand deletion
   const  deletetyreBrand = async (id) => {
     try {
-      const response = await fetch(`http://localhost:8000/delete-tyre-brand/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/delete-tyre-brand/${id}`, {
         method: 'DELETE',
       });
 
@@ -123,7 +145,7 @@ const Tyrebrand = () => {
 
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/active-tyres/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-tyres/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -268,7 +290,7 @@ const Tyrebrand = () => {
 
               <td className="table-cell">
               {brand.image.map((item, idx) => (
-                <img key={idx} src={`http://localhost:8000/uploads/${item}`} alt={item} className="cat-thumb" />
+                <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
               ))}
             </td>
                               <td>{brand.name}</td>

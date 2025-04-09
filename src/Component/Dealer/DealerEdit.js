@@ -7,6 +7,10 @@ import Navbar from '../Navbar/Navbar';
 import Sidebar from '../Siderbar/Sidebar';
 import { useParams, useNavigate } from 'react-router-dom';
 
+
+
+import url from "../../env.js"
+
 export default function DealerEdit() {
   const { id } = useParams(); 
   const navigate = useNavigate(); 
@@ -28,7 +32,7 @@ export default function DealerEdit() {
   useEffect(() => {
     const fetchDealerDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/edit-dealer/${id}`);
+        const response = await fetch(`${url.nodeapipath}/edit-dealer/${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -76,7 +80,7 @@ export default function DealerEdit() {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8000/update-dealer/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/update-dealer/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

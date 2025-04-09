@@ -7,7 +7,28 @@ import Sidebar from '../Siderbar/Sidebar';
 import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
+import url from "../../env.js"
+
+
+
+
 export default function Bikebrand() {
+
+
+
+
+const navigate = useNavigate()
+
+  useEffect(() => {
+    // Check if the user navigated directly to this page
+    if (document.referrer === '') {
+        // If the referrer is empty, redirect to home or another page
+        navigate('/');
+    }
+}, [navigate]);
+
+
+
   const [bikeBrands, setBikeBrands] = useState([]);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -19,18 +40,15 @@ export default function Bikebrand() {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [editMode, setEditMode] = useState(false);
   
-  const navigate = useNavigate();
+  
   const { id } = useParams(); // Get ID from URL if in edit mode
 
-  // Fetch bike brands on component load
-  useEffect(() => {
-    fetchBikeBrands();
-  }, []);
+
 
   // Fetch bike brands
   const fetchBikeBrands = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/get-bikebrand');
+      const response = await axios.get(`${url.nodeapipath}/get-bikebrand`);
       setBikeBrands(response.data);
     } catch (error) {
       console.error('Error fetching bike brands:', error);
@@ -38,11 +56,16 @@ export default function Bikebrand() {
   };
 
 
+    // Fetch bike brands on component load
+    useEffect(() => {
+      fetchBikeBrands();
+    }, []);
+
     
 useEffect(() => {
   const fetchCarBrands = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/get-bikebrands-with-model-counts');
+      const response = await axios.get(`${url.nodeapipath}/get-bikebrands-with-model-counts`);
       setBikeBrands(response.data);
     } catch (error) {
       console.error('Error fetching car brands:', error);
@@ -77,11 +100,11 @@ useEffect(() => {
 
     try {
       if (editMode) {
-        await axios.put(`http://localhost:8000/update-bikebrand/${id}`, form, {
+        await axios.put(`${url.nodeapipath}/update-bikebrand/${id}`, form, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       } else {
-        await axios.post('http://localhost:8000/add-bikebrand', form, {
+        await axios.post(`${url.nodeapipath}/add-bikebrand`, form, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
@@ -107,7 +130,7 @@ useEffect(() => {
   // Toggle active status
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/active-bikebrand/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-bikebrand/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +157,7 @@ useEffect(() => {
 
   const deleteBikeBrand = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/delete-bikebrand/${id}`);
+      await axios.delete(`${url.nodeapipath}/delete-bikebrand/${id}`);
       fetchBikeBrands(); // Refresh the bike brand list after deletion
     } catch (error) {
       console.error('Error deleting bike brand:', error);
@@ -273,7 +296,7 @@ useEffect(() => {
                               <tr key={brand._id}>
                                    <td className="table-cell">
                 {brand.image.map((item, idx) => (
-                  <img key={idx} src={`http://localhost:8000/uploads/${item}`} alt={item} className="cat-thumb" />
+                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
                 ))}
               </td>
                                 <td>{brand.name}</td>

@@ -441,6 +441,9 @@ import Navbar from '../Navbar/Navbar';
 import Select from 'react-select';
 import Sidebar from '../Siderbar/Sidebar';
 
+import url from "../../env.js"
+
+
 const DealerPage = () => {
   const [dealers, setDealers] = useState([]);
   const [tyreBrands, setTyreBrands] = useState([]);
@@ -465,7 +468,7 @@ const DealerPage = () => {
   useEffect(() => {
     const fetchDealers = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/get-dealer');
+        const response = await axios.get(`${url.nodeapipath}/get-dealer`);
         setDealers(response.data);
       } catch (error) {
         setError(error.message);
@@ -479,7 +482,7 @@ const DealerPage = () => {
   useEffect(() => {
     const fetchTyreBrands = async () => {
       try {
-        const response = await fetch('http://localhost:8000/get-tyre-brands');
+        const response = await fetch(`${url.nodeapipath}/get-tyre-brands`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -532,7 +535,7 @@ const DealerPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/add-dealer', formData);
+      const response = await axios.post(`${url.nodeapipath}/add-dealer`, formData);
       setDealers([...dealers, response.data.dealer]);
       setFormData({
         name: '',
@@ -555,7 +558,7 @@ const DealerPage = () => {
   // Handle toggle active status
   const handleToggleActive = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8000/active-dealer/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/active-dealer/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -581,7 +584,7 @@ const DealerPage = () => {
   // Handle delete
   const deleteDealer = async (id) => {
     try {
-      await axios.delete(`http://localhost:8000/delete-dealer/${id}`);
+      await axios.delete(`${url.nodeapipath}/delete-dealer/${id}`);
       setDealers(dealers.filter(dealer => dealer._id !== id));
     } catch (error) {
       setError(error.message);

@@ -7,6 +7,10 @@ import Navbar from '../Navbar/Navbar';
 import { useParams, useNavigate } from 'react-router-dom';
 import Sidebar from '../Siderbar/Sidebar';
 
+
+
+import url from "../../env.js"
+
 export default function Caredit() {
   const { id } = useParams(); 
   const navigate = useNavigate(); 
@@ -24,7 +28,7 @@ export default function Caredit() {
   useEffect(() => {
     const fetchCarBrandDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/get-carbrand/${id}`);
+        const response = await fetch(`${url.nodeapipath}/get-carbrand/${id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -37,7 +41,7 @@ export default function Caredit() {
           image: [], // Initialize empty array for new images
         });
 
-        setImagePreviews(brand.image.map(img => `http://localhost:8000/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
       } catch (error) {
         setError('Error fetching car brand details. Please try again later.');
         console.error('Error fetching car brand details:', error);
@@ -78,7 +82,7 @@ export default function Caredit() {
     });
 
     try {
-      const response = await fetch(`http://localhost:8000/car-update/${id}`, {
+      const response = await fetch(`${url.nodeapipath}/car-update/${id}`, {
         method: 'PUT',
         body: formDataToSend,
       });
@@ -92,7 +96,7 @@ export default function Caredit() {
 
       // Update image previews if new images were uploaded
       if (data.image && Array.isArray(data.image)) {
-        setImagePreviews(data.image.map(img => `http://localhost:8000/uploads/${img}`));
+        setImagePreviews(data.image.map(img => `${url.nodeapipath}/uploads/${img}`));
       }
 
       navigate('/carbrand');
