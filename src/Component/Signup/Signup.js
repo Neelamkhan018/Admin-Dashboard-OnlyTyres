@@ -118,12 +118,6 @@ const Login = ({ setAuth }) => {
     const [password, setPassword] = useState('');
     const navigate = useNavigate(); 
 
-    useEffect(() => {
-        const auth = localStorage.getItem('user');
-        if (auth) {
-            navigate('/dashboard'); 
-        }
-    }, [navigate]);
 
     // API fetch for login
     const handleLogin = async (e) => {
