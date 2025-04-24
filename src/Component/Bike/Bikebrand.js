@@ -14,7 +14,8 @@ import url from "../../env.js"
 
 export default function Bikebrand() {
 
-
+  const [bikeBrands, setBikeBrands] = useState([]);
+  const [error, setError] = useState('');
 
 
 const navigate = useNavigate()
@@ -29,8 +30,7 @@ const navigate = useNavigate()
 
 
 
-  const [bikeBrands, setBikeBrands] = useState([]);
-  const [error, setError] = useState('');
+  
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -44,7 +44,7 @@ const navigate = useNavigate()
   const { id } = useParams(); // Get ID from URL if in edit mode
 
 
-
+  useEffect(() => {
   // Fetch bike brands
   const fetchBikeBrands = async () => {
     try {
@@ -57,13 +57,12 @@ const navigate = useNavigate()
 
 
     // Fetch bike brands on component load
-    useEffect(() => {
       fetchBikeBrands();
     }, []);
 
     
 useEffect(() => {
-  const fetchCarBrands = async () => {
+  const fetchBikeBrands = async () => {
     try {
       const response = await axios.get(`${url.nodeapipath}/get-bikebrands-with-model-counts`);
       setBikeBrands(response.data);
@@ -72,7 +71,7 @@ useEffect(() => {
     }
   };
 
-  fetchCarBrands();
+  fetchBikeBrands();
 }, []);
 
   // Handle input changes
@@ -87,7 +86,6 @@ useEffect(() => {
     }
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -108,7 +106,9 @@ useEffect(() => {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
       }
-      fetchBikeBrands();
+      // Fetch bike brands again after the operation (add/update)
+      const response = await axios.get(`${url.nodeapipath}/get-bikebrand`);
+      setBikeBrands(response.data);
       resetForm();
     } catch (error) {
       console.error(`Error ${editMode ? 'updating' : 'adding'} bike brand:`, error);
@@ -158,11 +158,13 @@ useEffect(() => {
   const deleteBikeBrand = async (id) => {
     try {
       await axios.delete(`${url.nodeapipath}/delete-bikebrand/${id}`);
-      fetchBikeBrands(); // Refresh the bike brand list after deletion
+      // Update the UI without re-fetching the entire list
+      setBikeBrands(prevBrands => prevBrands.filter(brand => brand._id !== id));
     } catch (error) {
       console.error('Error deleting bike brand:', error);
     }
   };
+  
 
   return (
     <div className="ec-header-fixed ec-sidebar-fixed ec-sidebar-dark ec-header-light" id="body">

@@ -170,10 +170,10 @@ export default function Sidebar() {
               </a>
             </li>
             <li>
-              <a className="sidenav-item-link" href="vendor-profile.html">
-                <span className="nav-text">Vendors Profile</span>
-              </a>
-            </li>
+                      <a className="sidenav-item-link" href="/home-delivery">
+                        <span className="nav-text">Home delivery Order</span>
+                      </a>
+                    </li>
           </ul>
         </div>
       </li>
@@ -269,12 +269,6 @@ export default function Sidebar() {
                       </a>
                     </li>  
 
-
-                    <li>
-                      <a className="sidenav-item-link" href="/home-delivery">
-                        <span className="nav-text">Home delivery Order</span>
-                      </a>
-                    </li>
 
                   </ul>
                 </div>

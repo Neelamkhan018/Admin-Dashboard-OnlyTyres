@@ -41,7 +41,24 @@ export default function Carbrand() {
     image: [],
   });
   const [imagePreviews, setImagePreviews] = useState([]);
+  const [editMode, setEditMode] = useState(false);
 
+
+
+  useEffect(() => {
+  // Function to fetch car brands
+  const fetchCarBrands = async () => {
+    try {
+      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
+      console.log('Fetched car brands:', response.data); // Log fetched data
+      setCarBrands(response.data);
+    } catch (error) {
+      console.error('Error fetching car brands:', error);
+    }
+  };
+
+  fetchCarBrands();
+},[])
  
 
   
@@ -59,34 +76,22 @@ useEffect(() => {
 }, []);
 
 
- // Fetch car brands on component load
- useEffect(() => {
-  fetchCarBrands();
-}, []);
 
 
-
-  // Function to fetch car brands
-  const fetchCarBrands = async () => {
-    try {
-      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
-      console.log('Fetched car brands:', response.data); // Log fetched data
-      setCarBrands(response.data);
-    } catch (error) {
-      console.error('Error fetching car brands:', error);
-    }
-  };
-
-  // Function to delete a car brand
   const deleteCarBrand = async (id) => {
     try {
       await axios.delete(`${url.nodeapipath}/car-delete/${id}`);
       console.log('Deleted car brand with id:', id); // Log delete action
-      fetchCarBrands(); // Refresh the car brand list after deletion
+  
+      // Update the state to remove the deleted brand
+      setCarBrands((prevBrands) =>
+        prevBrands.filter((brand) => brand._id !== id)
+      );
     } catch (error) {
       console.error('Error deleting car brand:', error);
     }
   };
+  
 
   // Handle input changes in the form
   const handleChange = (e) => {
@@ -100,7 +105,30 @@ useEffect(() => {
     }
   };
 
-  // Handle form submission to add a car brand
+  // // Handle form submission to add a car brand
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   const form = new FormData();
+  //   form.append('name', formData.name);
+  //   form.append('slug', formData.slug);
+  //   form.append('description', formData.description);
+  //   for (let i = 0; i < formData.image.length; i++) {
+  //     form.append('image', formData.image[i]);
+  //   }
+
+  //   try {
+  //     await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
+  //       headers: { 'Content-Type': 'multipart/form-data' },
+  //     });
+  //     console.log('Added new car brand:', formData); // Log form data
+  //     fetchCarBrands(); // Refresh the car brand list after adding
+  //     resetForm(); // Reset the form
+  //   } catch (error) {
+  //     console.error('Error adding car brand:', error);
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
@@ -110,18 +138,31 @@ useEffect(() => {
     for (let i = 0; i < formData.image.length; i++) {
       form.append('image', formData.image[i]);
     }
-
+  
     try {
-      await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      console.log('Added new car brand:', formData); // Log form data
-      fetchCarBrands(); // Refresh the car brand list after adding
-      resetForm(); // Reset the form
+      if (editMode) {
+        // Update car brand if in edit mode
+        await axios.put(`${url.nodeapipath}/update-carbrand/${id}`, form, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      } else {
+        // Add a new car brand if not in edit mode
+        await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+      }
+  
+      // Fetch car brands again after the operation (add/update)
+      const response = await axios.get(`${url.nodeapipath}/get-carbrand`);
+      setCarBrands(response.data);
+  
+      // Reset form after submission
+      resetForm();
     } catch (error) {
-      console.error('Error adding car brand:', error);
+      console.error(`Error ${editMode ? 'updating' : 'adding'} car brand:`, error);
     }
   };
+  
 
   // Reset form and previews
   const resetForm = () => {

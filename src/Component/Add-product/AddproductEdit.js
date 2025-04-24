@@ -1663,6 +1663,11 @@ useEffect(() => {
   fetchTyreData();
 }, [id, tyreType]);
 
+
+
+
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
   
@@ -1804,16 +1809,22 @@ formData.append('tractorModel', selectedTractorModels.map(option => option.value
 
   
 
-  const widthOptions1 = [45, 50, 60, 70, 80,90,100,110,120,125,130,140,145,150,160,170,175,180,185,190,195,200,205,210,225,230,235,240,250,255,260,270,280,300,330];
+  //car
+  const widthOptions = [31,33,35,37,115,125,130,135,140,145,150,155,160,165,170,175,180,185,190, 195,200,205,210,215,220,225,235,240,245,250,255,265,270,275,285,295,305,315,325,335,345,355];
+  const heightOptions = [35,40,45,50,55,60,65,70,75,80];
+  const  customsOptions= [15,16,17,19];
+
+//bike
+  const widthOptions1 = [2.50 ,2.75,3.00,3.25,3.50,70,80,90,100,110,120,130,140,150,160,170,180,190,200,210,240,260];
   const heightOptions1 = [60,65,70,75,80,90,100,600,605];
   const customsOptions1 = [10,11,12,13,14,15,16,17,18,19,21,23];
-  const  SpeedRating1= ['Q : up to 160 km/h', 'R: up to 170 km/h',' S:up to 180 km/h', "T: up to 190 km/h" , " H: up to 210 km/h ", " V: up to 240 km/h"];
-  const LoadCapacity1 = [91,94,99] 
 
+
+
+  const SpeedRating1= ['Q : up to 160 km/h', 'R: up to 170 km/h',' S:up to 180 km/h', "T: up to 190 km/h" , " H: up to 210 km/h ", " V: up to 240 km/h"];
+  const LoadCapacity1 = [47, 52, 54, 58, 62, 65, 69, 73, 82, 85, 88, 91, 94, 95, 98, 99, 100, 104, 108] 
   const Quantity = [1,2,3,4,5,6,7,8,9,10];
   const Material = ["Steel","Nylon"];
-
-
   const warrantyOptions = ['1 year','2 years','3 years','4 years','5 years','6 years','7 years','8 years','9 years','10 years',
   ];
 
@@ -2214,8 +2225,6 @@ return (
   </div>
 
 
-
-
   {/* Thumbnail 3 */}
   <div className="thumb-upload">
     <div className="thumb-edit">
@@ -2310,13 +2319,12 @@ return (
       </div>
     </div>
   </div>      
-
-
-
-                        </div>
+</div>
                       </div>
                     </div>
                   </div>
+
+
                   <div className="col-lg-8">
                     <div className="ec-vendor-upload-detail">
                       <form onSubmit={handleSubmit} className="row g-3">
@@ -2368,6 +2376,183 @@ return (
                             </div>
                           </div>
 
+
+
+
+      
+                         <hr/>
+
+                        <div className="col-md-12 mt-5 mb-25">
+                          <label className="form-label">Vehicle Type</label>
+                          <div className="form-checkbox-box">
+                            <div className="form-check form-check-inline">
+                            <input type="radio" value="car" name="size1" checked={tyreType === 'car'} onChange={(event) => setType(event.target.value)} />
+                              <label>Car</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                            <input type="radio" value="bike" name="size1" checked={tyreType === 'bike'} onChange={(event) => setType(event.target.value)} />
+                              <label>Bike</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+      <input type="radio" value="truck" name="size1" checked={tyreType === 'truck'} onChange={(event) => setType(event.target.value)} />
+      <label>Truck</label>
+    </div>
+    <div className="form-check form-check-inline">
+      <input type="radio" value="tractor" name="size1" checked={tyreType === 'tractor'} onChange={(event) => setType(event.target.value)} />
+      <label>Tractor</label>
+    </div>           
+                          </div>
+                        </div>
+
+                        {tyreType === 'car' && (
+                          <>
+    
+<div>
+    <div className="col-md-12">
+      <label className="form-label">Car Brand</label>
+      <Select
+        isMulti
+        options={carBrands}
+        value={selectedCarBrands}
+        onChange={handleCarBrandsChange}
+        className="form-input"
+      />
+      <br/>
+      
+      <div className="col-md-12">
+        <label className="form-label">Car Models </label>
+        <Select
+          isMulti
+          options={carModels}
+          value={selectedCarModels}
+          onChange={handleCarModelsChange}
+          className="form-input"
+        />
+      </div>
+      <br/>
+    </div>
+  </div>      
+                        </>
+                        )}
+
+                            {tyreType === 'bike' && (
+                          <>
+                          
+
+<div className="col-md-12">
+      <label className="form-label">Bike Brand</label>
+      <Select
+        isMulti
+        options={bikeBrands}
+        value={selectedBikeBrands}
+        onChange={handleBikeBrandsChange}
+        className="form-input"
+      />
+
+      <br/>
+
+      <div className="col-md-12">
+        <label className="form-label">
+          Bike Models 
+        </label>
+        <Select
+          isMulti
+          options={bikeModels}
+          value={selectedBikeModels}
+          onChange={handleBikeModelsChange}
+          className="form-input"
+        />
+      </div>
+      <br/>
+    </div>
+
+
+
+                        <div className="col-md-12 mt-5 mb-25">
+                          <label className="form-label">Tyre Type</label>
+                          <div className="form-checkbox-box">
+                            <div className="form-check form-check-inline">
+                            <input type="radio" value={fronttyre} onChange={(event) => setFronttyre(event.target.value)} className="form-input" />
+                              <label>Front Tyre</label>
+                            </div>
+                            <div className="form-check form-check-inline">
+                            <input type="radio" value={reartyre} onChange={(event) => setRearTyre(event.target.value)} className="form-input" />
+                              <label>Rear Tyre</label>
+                            </div>
+                           
+                          </div>
+                        </div>
+
+                        </>
+                        )}  
+
+
+{tyreType === 'truck' && (
+  <>
+    <div className="col-md-12">
+      <label className="form-label">Truck Brand</label>
+      <Select
+        isMulti
+        options={truckBrands}
+        value={selectedTruckBrands}
+        onChange={setSelectedTruckBrands}
+        className="form-input"
+      />
+   
+    <br/>
+    <div className="col-md-12">
+      <label className="form-label">Truck Models <span>(Type and make comma to separate tags)</span></label>
+      <Select
+        isMulti
+        options={truckModels}
+        value={selectedTruckModels}
+        onChange={setSelectedTruckModels}
+        className="form-input"
+      />
+    </div>
+    <br/>
+    </div>
+    
+  </>
+)}
+
+{tyreType === 'tractor' && (
+        <>
+          <div className="col-md-12">
+            <label className="form-label">Tractor Brand</label>
+            <Select
+              isMulti
+              options={tractorBrands}
+              value={selectedTractorBrands}
+              onChange={setSelectedTractorBrands}
+              className="form-input"
+            />
+       
+          <br/>
+          <div className="col-md-12">
+            <label className="form-label">Tractor Models </label>
+            <Select
+              isMulti
+              options={tractorModels}
+              value={selectedTractorModels}
+              onChange={setSelectedTractorModels}
+              className="form-input"
+            />
+          </div>
+          <br/>
+          </div>
+        </>
+      )}
+
+
+                        <hr/>
+
+
+
+
+
+
+
                         <div className="col-md-4">
                           <label className="form-label">Warranty</label>    
                             <select  name="categories" id="Categories" value={warranty} onChange={(event) => setWarranty(event.target.value)} className="form-select">
@@ -2417,44 +2602,61 @@ return (
                                   </select>
                         </div>
 
-                        
-                        <div className="col-md-2">
-                          <label className="form-label">Width</label>
-                          <select name="categories" id="Categories" value={width} onChange={(event) => setWidth(event.target.value)} className="form-input">
-                            <option value="">width</option>
-                               {widthOptions1.map((width, index) => (
-                              <option key={index} value={width}>
-                                   {width}
-                                   </option>
-                                    ))}
-                                  </select>
-                        </div>
 
+<div className="col-md-2">
+  <label className="form-label">Width</label>
+  <select
+    name="categories"
+    id="Categories"
+    value={width}
+    onChange={(event) => setWidth(event.target.value)}
+    className="form-input"
+  >
+    <option value="">Width</option>
+    {(tyreType === 'car' ? widthOptions : widthOptions1).map((item, index) => (
+      <option key={index} value={item}>
+        {item}
+      </option>
+    ))}
+  </select>
+</div>
 
-                        <div className="col-md-2">
-                          <label className="form-label">Height</label>
-                          <select name="categories" id="Categories" value={height} onChange={(event) => setHeight(event.target.value)} className="form-input">
-                          <option value="">Height</option>
-                          {heightOptions1.map((height, index) => (
-                            <option key={index} value={height}>
-                              {height}
-                            </option>
-                          ))}
-                        </select>
-                        </div>
+<div className="col-md-2">
+  <label className="form-label">Height</label>
+  <select
+    name="categories"
+    id="Categories"
+    value={height}
+    onChange={(event) => setHeight(event.target.value)}
+    className="form-input"
+  >
+    <option value="">Height</option>
+    {(tyreType === 'car' ? heightOptions : heightOptions1).map((item, index) => (
+      <option key={index} value={item}>
+        {item}
+      </option>
+    ))}
+  </select>
+</div>
 
+<div className="col-md-3">
+  <label className="form-label">Customs</label>
+  <select
+    name="categories"
+    id="Categories"
+    value={customs}
+    onChange={(event) => setCustoms(event.target.value)}
+    className="form-input"
+  >
+    <option value="">Customs</option>
+    {(tyreType === 'car' ? customsOptions : customsOptions1).map((item, index) => (
+      <option key={index} value={item}>
+        {item}
+      </option>
+    ))}
+  </select>
+</div>
 
-                        <div className="col-md-3">
-                          <label className="form-label">Customs</label>
-                          <select name="categories" id="Categories" value={customs} onChange={(event) => setCustoms(event.target.value)} className="form-input">
-                        <option value="">Customs</option>
-                        {customsOptions1.map((customs, index) => (
-                          <option key={index} value={customs}>
-                            {customs}
-                          </option>
-                        ))}
-                      </select>
-                        </div>
 
                   <div className="col-md-5 mb-25">
                     <label className="form-label">Seasons</label>
@@ -2545,7 +2747,7 @@ return (
                         </select>
                         </div>
 
-                       
+{/*                        
                          <hr/>
 
                         <div className="col-md-12 mt-5 mb-25">
@@ -2699,7 +2901,12 @@ return (
       )}
 
 
-                        <hr/>
+                       */} 
+                       
+                       
+                       <hr/> 
+
+                       <br/>
 
     <div>
       <label>
