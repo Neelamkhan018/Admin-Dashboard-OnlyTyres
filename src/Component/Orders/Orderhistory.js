@@ -173,10 +173,12 @@ const navigate = useNavigate()
                                         <div className="dropdown-menu">
                                           <a className="dropdown-item"  onClick={() => navigate(`/order-detail/${order._id}`)}  >Detail</a>
                                           <a className="dropdown-item" onClick={() => navigate(`/invoice/${order._id}`)}  >Invoice</a>
-                                          <button className="dropdown-item text-warning" onClick={() => handleRejectOrder(order._id)}>Reject</button>
+                                          <button className="dropdown-item text-warning"
+                                          //  onClick={() => handleRejectOrder(order._id)}
+                                           >Reject</button>
                                           <button
                                             className="dropdown-item text-danger"
-                                            onClick={() => handleCancelOrder(order._id)}
+                                            // onClick={() => handleCancelOrder(order._id)}
                                           >
                                             Cancel
                                           </button>
