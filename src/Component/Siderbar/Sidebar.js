@@ -241,6 +241,11 @@ export default function Sidebar() {
                         <span className="nav-text">Tractor Brand</span>
                       </a>
                     </li>
+                    <li>
+                      <a className="sidenav-item-link" href="/Batterybrand">
+                        <span className="nav-text">Battery Brand</span>
+                      </a>
+                    </li>
                   </ul>
                 </div>
               </li>

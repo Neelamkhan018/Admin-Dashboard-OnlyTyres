@@ -274,12 +274,20 @@ const navigate = useNavigate()
                                 </td>
                                 <td>
                                   <div className="btn-group">
-                                    <Link
+                                    {/* <Link
                                       to={`/truckmodeledit/${model._id}`}
                                       className="btn btn-outline-success"
                                     >
                                       Edit
-                                    </Link>
+                                    </Link> */}
+
+<Link
+  to={`/truckmodeledit/${model._id}`}
+  state={{ brandid: state.brandid }} // Pass brandid here
+  className="btn btn-outline-success"
+>
+  Edit
+</Link>
 
                                     <button
                                       type="button"
