@@ -162,7 +162,9 @@ const AddDealerList = () => {
                                   <td>
                                     {tyre.avatarImages && (
                                       <img
-                                        src={`${url.nodeapipath}/uploads/${tyre.avatarImages}`}
+                                        // src={`${url.nodeapipath}/uploads/${tyre.avatarImages}`}
+                src={`https://tyres.blr1.digitaloceanspaces.com/${tyre.avatarImages}`}
+
                                         alt="Tyre"
                                         className="tbl-thumb"
                                         style={{ width: "80px", height: "auto" }}

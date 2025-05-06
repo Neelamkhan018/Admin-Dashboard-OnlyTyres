@@ -46,6 +46,18 @@ import TractorBrand from './Component/Tractor/TractorBrand.js';
 import TractorEdit from './Component/Tractor/Tractoredit.js';
 import TractorModelPage from './Component/Tractor/Tractormodel.js';
 import TractorModelEdit from './Component/Tractor/Tractormodeledit.js';
+import BatteryBrand from './Component/Battery/BatteryBrand.js';
+import BatteryBrandEdit from './Component/Battery/Batterybrandedit.js';
+import BatteryModelPage from './Component/Battery/Batterymodel.js';
+import BatteryModelEdit from './Component/Battery/Batterymodeledit.js';
+import AlloyWheelBrand from './Component/AlloyWheel/AlloyWheelBrand.js';
+import AlloyWheelBrandEdit from './Component/AlloyWheel/AlloyWheelBrandedit.js';
+import AlloyWheelModel from './Component/AlloyWheel/AlloyWheelmodel.js';
+import AlloyWheelModelEdit from './Component/AlloyWheel/AlloyWheelmodeledit.js';
+import AccessoriesBrand from './Component/Accessories/AccessoriesBrand.js';
+import AccessoriesBrandEdit from './Component/Accessories/AccessoriesBrandedit.js';
+import AccessoriesModel from './Component/Accessories/Accessoriesmodel.js';
+import AccessoriesModelEdit from './Component/Accessories/Accessoriesmodeledit.js';
 
 
 
@@ -139,6 +151,27 @@ export default function App() {
                     <Route path="/Tractoredit/:id" element={<TractorEdit/>} />
                     <Route path="/Tractormodel" element={<TractorModelPage/>} />
                     <Route path="/Tractormodeledit/:id" element={<TractorModelEdit/>} />
+
+                    <Route path="/Batterybrand" element={<BatteryBrand/>} />
+                    <Route path="/Batterybrandedit/:id" element={<BatteryBrandEdit/>} />
+                    <Route path="/Batterymodel" element={<BatteryModelPage/>} />
+                    <Route path="/Batterymodeledit/:id" element={<BatteryModelEdit/>} />
+
+
+                    <Route path="/AlloyWheelbrand" element={<AlloyWheelBrand/>} />
+                    <Route path="/AlloyWheelbrandedit/:id" element={<AlloyWheelBrandEdit/>} />
+                    <Route path="/AlloyWheelmodel" element={<AlloyWheelModel/>} />
+                    <Route path="/AlloyWheelmodeledit/:id" element={<AlloyWheelModelEdit/>} />
+
+                    <Route path="/Accessoriesbrand" element={<AccessoriesBrand/>} />
+                    <Route path="/Accessoriesbrandedit/:id" element={<AccessoriesBrandEdit/>} />
+                    <Route path="/Accessoriesmodel" element={<AccessoriesModel/>} />
+                    <Route path="/Accessoriesmodeledit/:id" element={<AccessoriesModelEdit/>} />
+
+                    
+
+
+
 
 
 
