@@ -1389,7 +1389,6 @@ const [bikeModels, setBikeModels] = useState([]);
 const [selectedBikeBrands, setSelectedBikeBrands] = useState([]);
 const [selectedBikeModels, setSelectedBikeModels] = useState([]);
 const [formData , setFormData] = useState([])
-const [cities, setCities] = useState([]);
 const [avatarImages, setAvatarImages] = useState([]);
 const [avatarImageUrls, setAvatarImageUrls] = useState([]);
 const [thumb1Images, setThumb1Images] = useState([]);
@@ -1404,11 +1403,13 @@ const [thumb5Images, setThumb5Images] = useState([]);
 const [thumb5ImageUrls, setThumb5ImageUrls] = useState([]);
 const [thumb6Images, setThumb6Images] = useState([]);
 const [thumb6ImageUrls, setThumb6ImageUrls] = useState([]);
-const [state, setState] = useState('');
-const [selectedCity, setSelectedCity] = useState('');
+
 const [pinCode, setPinCode] = useState('');
 const [details, setDetails] = useState('');
 const [slug, setSlug] = useState("");
+const [addressCities, setAddressCities] = useState([[]]); // array of city arrays
+
+
 
 
 const [truckBrands, setTruckBrands] = useState([]);
@@ -1422,8 +1423,41 @@ const [selectedTractorBrands, setSelectedTractorBrands] = useState([]);
 const [tractorModels, setTractorModels] = useState([]);
 const [selectedTractorModels, setSelectedTractorModels] = useState([]);
 
-const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+
+
+// Battery
+const [batteryType, setBatteryType] = useState('car');
+
+
+const [batteryBrands, setBatteryBrands] = useState([]);
+  const [selectedBatteryBrands, setSelectedBatteryBrands] = useState([]);
+  const [batteryModels, setBatteryModels] = useState([]);
+  const [selectedBatteryModels, setSelectedBatteryModels] = useState([]);
+
+  const [batteryWeight, setBatteryWeight] = useState('');
+    const [batteryHeight, setBatteryHeight] = useState('');
+    const [batteryCapacity, setBatteryCapacity] = useState('');
+    const [voltage, setVoltage] = useState('');
+
+    
+ const [Color, setColor] = useState('');
+  const [WheelSize, setWheelSize] = useState('');
+  const [Holes, setHoles] = useState('');
+  const [PCD, setPCD] = useState('');
+  const [alloywheelType, setAlloywheelType] = useState('');
+  const [selectedAlloywheelBrands, setSelectedAlloywheelBrands] = useState([]);
+  const [alloywheelBrands, setAlloywheelBrands] = useState([]);
+  const [alloywheelModels, setAlloywheelModels] = useState([]); // Array to hold alloy wheel models
+  const [selectedAlloywheelModels, setSelectedAlloywheelModels] = useState([]); // Selected alloy wheel models
+
+
+  const [accessoryType, setAccessoryType] = useState('');
+  const [accessoryBrands, setAccessoryBrands] = useState([]);
+  const [selectedAccessoryBrands, setSelectedAccessoryBrands] = useState([]);
+  const [accessoryModels, setAccessoryModels] = useState([]);
+  const [selectedAccessoryModels, setSelectedAccessoryModels] = useState([]);
+
+
 
 const navigate = useNavigate()
 
@@ -1443,10 +1477,16 @@ const navigate = useNavigate()
   const handleStateChange = (index, state) => {
     const updatedAddresses = [...addresses];
     updatedAddresses[index].state = state;
-    updatedAddresses[index].city = ''; // Reset city when state changes
+    updatedAddresses[index].city = ''; // Reset city
+  
+    const updatedCities = [...addressCities];
+    updatedCities[index] = stateCityData[state] || [];
+  
     setAddresses(updatedAddresses);
-    setCities(stateCityData[state] || []);
+    setAddressCities(updatedCities);
   };
+  
+
 
   const handleCityChange = (index, city) => {
     const updatedAddresses = [...addresses];
@@ -1525,6 +1565,238 @@ const navigate = useNavigate()
   };
   
 
+
+
+
+
+// useEffect(() => {
+//   const fetchTyreData = async () => {
+//     try {
+//       const response = await fetch(`${url.nodeapipath}/get-tyre/${id}/${tyreType}`);
+
+//       if (!response.ok) {
+//         throw new Error('Failed to fetch tyre data');
+//       }
+
+//       const data = await response.json(); // Directly parse as JSON
+
+//       // Populate the state with fetched data
+//       setTitle(data.title || '');
+//       setSlug(data.slug || '');
+//       setWidth(data.width || []);
+//       setHeight(data.height || []);
+//       setCustoms(data.customs || []);
+//       const seasonsArray = Array.isArray(data.seasons) ? data.seasons : [data.seasons];
+//       setSeasons(seasonsArray);
+//       setspeedRating(data.speedRating || []);
+//       setloadCapacity(data.loadCapacity || []);
+//       setMaterial(data.material || []);
+//       setImage(data.image || []);
+//       setPrice(data.price || '');
+//       setSalesprice(data.Salesprice || '');
+//       setDescription(data.description || '');
+//       setFronttyre(data.frontTyre || '');
+//       setRearTyre(data.rearTyre || '');
+//       setManufactureMonth(data.manufactureMonth || '');
+//       setManufactureYear(data.manufactureYear || '');
+//       setWarranty(data.warranty || '');
+//       setQuantity(data.quantity || '');
+      
+//       setDescription1(data.description1 || '');
+
+//       setColor(data.Color || ''); // Set previous Color
+//       setWheelSize(data.WheelSize || ''); // Set previous WheelSize
+//       setHoles(data.Holes || ''); // Set previous Holes
+//       setPCD(data.PCD || ''); // Set previous PCD
+  
+
+//       // For Car Tyres
+//       setSelectedCarBrands(
+//         Array.isArray(data.carbrand) 
+//           ? data.carbrand.map(item => ({ value: item, label: item })) 
+//           : []
+//       );
+
+//       setSelectedCarModels(
+//         Array.isArray(data.carModel) 
+//           ? data.carModel.map(item => ({ value: item, label: item })) 
+//           : []
+//       );
+
+
+  
+
+//       // For Bike Tyres
+//       setSelectedBikeBrands(
+//         Array.isArray(data.bikeBrand) 
+//           ? data.bikeBrand.map(item => ({ value: item, label: item })) 
+//           : []
+//       );
+
+//       setSelectedBikeModels(
+//         Array.isArray(data.bikeModel) 
+//           ? data.bikeModel.map(item => ({ value: item, label: item })) 
+//           : []
+//       );
+
+//       // For Tyre Brand (both types)
+//       setSelectedTyreBrand(
+//         Array.isArray(data.tyreBrand) 
+//           ? data.tyreBrand.map(item => ({ value: item, label: item })) 
+//           : []
+//       );
+
+//       // For Truck Tyres
+//       if (tyreType === 'truck') {
+//         setSelectedTruckBrands(
+//           Array.isArray(data.truckBrand) 
+//             ? data.truckBrand.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+
+//         setSelectedTruckModels(
+//           Array.isArray(data.truckModel) 
+//             ? data.truckModel.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+//       }
+
+//       // For Tractor Tyres
+//       if (tyreType === 'tractor') {
+//         setSelectedTractorBrands(
+//           Array.isArray(data.tractorBrand) 
+//             ? data.tractorBrand.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+
+//         setSelectedTractorModels(
+//           Array.isArray(data.tractorModel) 
+//             ? data.tractorModel.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+//       }
+
+
+//       if (tyreType === 'battery') {
+
+//         setBatteryType(data.batteryType || '');
+
+//         setSelectedBatteryBrands(
+//           Array.isArray(data.BatteryBrand) 
+//             ? data.BatteryBrand.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+
+//         setSelectedBatteryModels(
+//           Array.isArray(data.BatteryModel) 
+//             ? data.BatteryModel.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+//         setBatteryCapacity(data.capacity || '');
+//         setVoltage(data.voltage || '');
+//         setBatteryWeight(data.batteryweight || '');
+//         setBatteryHeight(data.batteryheight || '');
+//       }
+
+      
+
+//       // For Alloy Wheel
+//       if (tyreType === 'alloywheel') {
+//         setAlloywheelType(data.alloywheelType || '');
+
+//         setSelectedAlloywheelBrands(
+//           Array.isArray(data.alloywheelBrand) 
+//             ? data.alloywheelBrand.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+
+//         setSelectedAlloywheelModels(
+//           Array.isArray(data.alloywheelModel) 
+//             ? data.alloywheelModel.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+        
+//         // Set previous data for alloy wheels
+//       setColor(data.Color || ''); // Set previous Color
+//       setWheelSize(data.WheelSize || ''); // Set previous WheelSize
+//       setHoles(data.Holes || ''); // Set previous Holes
+//       setPCD(data.PCD || ''); // Set previous PCD
+//       setAlloywheelType(data.alloywheelType || ''); // Set previous alloywheelType
+//       }
+
+//       // For Accessories
+//       if (tyreType === 'accessories') {
+       
+//         setAccessoryType(data.accessoryType || '');
+
+
+//         setSelectedAccessoryBrands(
+//           Array.isArray(data.accessoryBrand) 
+//             ? data.accessoryBrand.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+
+//         setSelectedAccessoryModels(
+//           Array.isArray(data.accessoryModel) 
+//             ? data.accessoryModel.map(item => ({ value: item, label: item })) 
+//             : []
+//         );
+
+//       }
+  
+
+// // Handle Avatar Images
+// if (Array.isArray(data.avatarImages)) {
+//   setAvatarImages(
+//     data.avatarImages.map((img) => `https://tyres.blr1.digitaloceanspaces.com/${img}`)
+//   );
+// } else if (data.avatarImages) {
+//   setAvatarImages([`https://tyres.blr1.digitaloceanspaces.com/${data.avatarImages}`]);
+// } else {
+//   setAvatarImages([]); // Ensure it's always an array
+// }
+
+// // Handle Thumbnail Images (1 to 6)
+// const thumbImages = [1, 2, 3, 4, 5, 6].map(num => {
+//   const thumbKey = `thumb${num}Images`;
+//   if (Array.isArray(data[thumbKey])) {
+//     return data[thumbKey].map((img) => `https://tyres.blr1.digitaloceanspaces.com/${img}`);
+//   } else if (data[thumbKey]) {
+//     return [`https://tyres.blr1.digitaloceanspaces.com/${data[thumbKey]}`];
+//   }
+//   return [];
+// });
+
+
+
+//         setThumb1Images(thumbImages[0]);
+//         setThumb2Images(thumbImages[1]);
+//         setThumb3Images(thumbImages[2]);
+//         setThumb4Images(thumbImages[3]);
+//         setThumb5Images(thumbImages[4]);
+//         setThumb6Images(thumbImages[5]);
+  
+//         // // Populate addresses from the fetched data.
+//         // setAddresses(data.addresses || []);
+
+//         if (Array.isArray(data.addresses)) {
+//           setAddresses(data.addresses);
+        
+//           const loadedCities = data.addresses.map(addr => stateCityData[addr.state] || []);
+//           setAddressCities(loadedCities);
+//         }     
+  
+//       } catch (error) {
+//         setError('Error fetching tyre data');
+//         console.error(error);
+//       }
+//     };
+  
+//     fetchTyreData();
+//   }, [id, tyreType]);
+  
+
+
 useEffect(() => {
   const fetchTyreData = async () => {
     try {
@@ -1534,16 +1806,15 @@ useEffect(() => {
         throw new Error('Failed to fetch tyre data');
       }
 
-      const data = await response.json(); // Directly parse as JSON
+      const data = await response.json();
 
-      // Populate the state with fetched data
+      // Populate state with fetched data
       setTitle(data.title || '');
       setSlug(data.slug || '');
       setWidth(data.width || []);
       setHeight(data.height || []);
       setCustoms(data.customs || []);
-      const seasonsArray = Array.isArray(data.seasons) ? data.seasons : [data.seasons];
-      setSeasons(seasonsArray);
+      setSeasons(Array.isArray(data.seasons) ? data.seasons : [data.seasons]);
       setspeedRating(data.speedRating || []);
       setloadCapacity(data.loadCapacity || []);
       setMaterial(data.material || []);
@@ -1558,88 +1829,85 @@ useEffect(() => {
       setWarranty(data.warranty || '');
       setQuantity(data.quantity || '');
       setDescription1(data.description1 || '');
+      setColor(data.Color || '');
+      setWheelSize(data.WheelSize || '');
+      setHoles(data.Holes || '');
+      setPCD(data.PCD || '');
 
-      // For Car Tyres
-      setSelectedCarBrands(
-        Array.isArray(data.carbrand) 
-          ? data.carbrand.map(item => ({ value: item, label: item })) 
-          : []
-      );
+      // Handle dynamic brands and models based on tyreType
+      const mapBrandsAndModels = (brandKey, modelKey) => {
+        return {
+          brands: Array.isArray(data[brandKey]) ? data[brandKey].map(item => ({ value: item, label: item })) : [],
+          models: Array.isArray(data[modelKey]) ? data[modelKey].map(item => ({ value: item, label: item })) : []
+        };
+      };
 
-      setSelectedCarModels(
-        Array.isArray(data.carModel) 
-          ? data.carModel.map(item => ({ value: item, label: item })) 
-          : []
-      );
-
-      // For Bike Tyres
-      setSelectedBikeBrands(
-        Array.isArray(data.bikeBrand) 
-          ? data.bikeBrand.map(item => ({ value: item, label: item })) 
-          : []
-      );
-
-      setSelectedBikeModels(
-        Array.isArray(data.bikeModel) 
-          ? data.bikeModel.map(item => ({ value: item, label: item })) 
-          : []
-      );
-
-      // For Tyre Brand (both types)
-      setSelectedTyreBrand(
-        Array.isArray(data.tyreBrand) 
-          ? data.tyreBrand.map(item => ({ value: item, label: item })) 
-          : []
-      );
+      // Car and Bike Tyres
+      const { brands: carBrands, models: carModels } = mapBrandsAndModels('carbrand', 'carModel');
+      const { brands: bikeBrands, models: bikeModels } = mapBrandsAndModels('bikeBrand', 'bikeModel');
+      setSelectedCarBrands(carBrands);
+      setSelectedCarModels(carModels);
+      setSelectedBikeBrands(bikeBrands);
+      setSelectedBikeModels(bikeModels);
 
       // For Truck Tyres
       if (tyreType === 'truck') {
-        setSelectedTruckBrands(
-          Array.isArray(data.truckBrand) 
-            ? data.truckBrand.map(item => ({ value: item, label: item })) 
-            : []
-        );
-
-        setSelectedTruckModels(
-          Array.isArray(data.truckModel) 
-            ? data.truckModel.map(item => ({ value: item, label: item })) 
-            : []
-        );
+        const { brands: truckBrands, models: truckModels } = mapBrandsAndModels('truckBrand', 'truckModel');
+        setSelectedTruckBrands(truckBrands);
+        setSelectedTruckModels(truckModels);
       }
 
       // For Tractor Tyres
       if (tyreType === 'tractor') {
-        setSelectedTractorBrands(
-          Array.isArray(data.tractorBrand) 
-            ? data.tractorBrand.map(item => ({ value: item, label: item })) 
-            : []
-        );
+        const { brands: tractorBrands, models: tractorModels } = mapBrandsAndModels('tractorBrand', 'tractorModel');
+        setSelectedTractorBrands(tractorBrands);
+        setSelectedTractorModels(tractorModels);
+      }
 
-        setSelectedTractorModels(
-          Array.isArray(data.tractorModel) 
-            ? data.tractorModel.map(item => ({ value: item, label: item })) 
-            : []
-        );
+      // For Battery Tyres
+      if (tyreType === 'battery') {
+        setBatteryType(data.batteryType || '');
+        const { brands: batteryBrands, models: batteryModels } = mapBrandsAndModels('BatteryBrand', 'BatteryModel');
+        setSelectedBatteryBrands(batteryBrands);
+        setSelectedBatteryModels(batteryModels);
+        setBatteryCapacity(data.capacity || '');
+        setVoltage(data.voltage || '');
+        setBatteryWeight(data.batteryweight || '');
+        setBatteryHeight(data.batteryheight || '');
+      }
+
+      // For Alloy Wheel
+      if (tyreType === 'alloywheel') {
+        setAlloywheelType(data.alloywheelType || '');
+        const { brands: alloyBrands, models: alloyModels } = mapBrandsAndModels('alloywheelBrand', 'alloywheelModel');
+        setSelectedAlloywheelBrands(alloyBrands);
+        setSelectedAlloywheelModels(alloyModels);
+      }
+
+      // For Accessories
+      if (tyreType === 'accessories') {
+        setAccessoryType(data.accessoryType || '');
+        const { brands: accessoryBrands, models: accessoryModels } = mapBrandsAndModels('accessoryBrand', 'accessoryModel');
+        setSelectedAccessoryBrands(accessoryBrands);
+        setSelectedAccessoryModels(accessoryModels);
       }
 
       // Handle Avatar Images
       if (Array.isArray(data.avatarImages)) {
-        setAvatarImages(
-          data.avatarImages.map((img) => `${url.nodeapipath}/uploads/${img}`)
-        );
+        setAvatarImages(data.avatarImages.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
       } else if (data.avatarImages) {
-        setAvatarImages([`${url.nodeapipath}/uploads/${data.avatarImages}`]);
+        setAvatarImages([`https://tyres.blr1.digitaloceanspaces.com/${data.avatarImages}`]);
       } else {
-        setAvatarImages([]); // Ensure it's always an array
+        setAvatarImages([]);
       }
 
       // Handle Thumbnail Images (1 to 6)
       const thumbImages = [1, 2, 3, 4, 5, 6].map(num => {
         const thumbKey = `thumb${num}Images`;
         if (Array.isArray(data[thumbKey])) {
-          return data[thumbKey].map((img) => `${url.nodeapipath}/uploads/${img}`);
+          return data[thumbKey].map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`);
         } else if (data[thumbKey]) {
-          return [`${url.nodeapipath}/uploads/${data[thumbKey]}`];
+          return [`https://tyres.blr1.digitaloceanspaces.com/${data[thumbKey]}`];
         }
         return [];
       });
@@ -1651,8 +1919,12 @@ useEffect(() => {
       setThumb5Images(thumbImages[4]);
       setThumb6Images(thumbImages[5]);
 
-      // Populate addresses from the fetched data.
-      setAddresses(data.addresses || []);
+      // Handle addresses
+      if (Array.isArray(data.addresses)) {
+        setAddresses(data.addresses);
+        const loadedCities = data.addresses.map(addr => stateCityData[addr.state] || []);
+        setAddressCities(loadedCities);
+      }
 
     } catch (error) {
       setError('Error fetching tyre data');
@@ -1662,9 +1934,6 @@ useEffect(() => {
 
   fetchTyreData();
 }, [id, tyreType]);
-
-
-
 
 
 
@@ -1714,6 +1983,36 @@ useEffect(() => {
 
     formData.append('tractorBrand', selectedTractorBrands.map(option => option.value).join(','));
 formData.append('tractorModel', selectedTractorModels.map(option => option.value).join(','));
+
+
+
+
+
+
+if (tyreType === 'battery') {
+  formData.append('batteryType', batteryType);
+  formData.append('BatteryBrand', selectedBatteryBrands.map(option => option.value).join(','));
+  formData.append('BatteryModel', selectedBatteryModels.map(option => option.value).join(','));
+  formData.append('batteryweight', batteryWeight);
+  formData.append('batteryheight', batteryHeight);
+  formData.append('capacity', batteryCapacity);
+  formData.append('voltage', voltage);
+}
+if (tyreType === 'alloywheel') {
+  formData.append('alloywheelType', alloywheelType);
+  formData.append('alloywheelBrand', selectedAlloywheelBrands.map(option => option.value).join(','));
+  formData.append('alloywheelModel', selectedAlloywheelModels.map(option => option.value).join(','));
+}
+if (tyreType === 'accessories') {
+  formData.append('accessoryType', accessoryType);
+  formData.append('accessoryBrand', selectedAccessoryBrands.map(option => option.value).join(','));
+  formData.append('accessoryModel', selectedAccessoryModels.map(option => option.value).join(','));
+}
+
+
+
+
+
 
     // Append image files (check if they are arrays)
     if (Array.isArray(avatarImages)) {
@@ -1765,6 +2064,10 @@ formData.append('tractorModel', selectedTractorModels.map(option => option.value
       setError('Failed to update tyre');
     }
   };
+
+
+
+
 
 
   const handleImageChange = (event, thumbId) => {
@@ -1827,6 +2130,32 @@ formData.append('tractorModel', selectedTractorModels.map(option => option.value
   const Material = ["Steel","Nylon"];
   const warrantyOptions = ['1 year','2 years','3 years','4 years','5 years','6 years','7 years','8 years','9 years','10 years',
   ];
+
+
+  
+  // Example options — you can modify these based on your data
+const batteryWeightOptions = ['50mm', '60mm', '70mm', '80mm', '90mm'];
+const batteryHeightOptions = ['100mm', '110mm', '120mm', '130mm'];
+const voltageOptions = ['6V', '12V', '24V'];
+const batteryCapacityOptions = [
+  '5Ah','10Ah', '20Ah', '30Ah', '40Ah', '50Ah', '60Ah', '65Ah', '70Ah', '80Ah'
+];
+
+
+
+//Alloy Wheels 
+const colorOptions = [
+  'Silver', 'Black', 'Gun Metal', 'Matt Black', 'Black + Red', 
+  'Matt Anthracite', 'Glossy Anthracite', 'FMBK', 'Black Milling', 
+  'Black Machined', 'Black UCM (1 item)', 'Glossy Black', 
+  'Silver Machined', 'Candy Black Machined', 'Matt Bronze (1 item)', 
+  'EP Clear Sheen Silver', 'C Clear Starlight Bla', 'FP Clear Neon', 
+  'FP Lustrous Bronze'
+];
+const wheelSizeOptions = ['14 inches','15 inches', '16 inches', '17 inches', '18 inches', '19 inches'];
+const holesOptions = ['4 Holes', '5 Holes', '6 Holes' , '7 Holes' ,'8 Holes'];
+const pcdOptions = ['100mm', '110mm', '120mm', '130mm'];
+
 
 //------------------------Fetch tractor brand and model-----------------------
 
@@ -2079,6 +2408,176 @@ const handleCarModelsChange = (selectedOptions) => {
   };
 
   
+
+
+//----------------------battery brand and model --------------------------
+
+
+// Fetch Battery Brands
+useEffect(() => {
+  const fetchBatteryBrands = async () => {
+    try {
+      const response = await axios.get(`${url.nodeapipath}/get-Batterybrand`);
+      const activeBrands = response.data.filter(brand => brand.active);
+      setBatteryBrands(activeBrands.map(brand => ({ label: brand.name, value: brand._id })));
+    } catch (error) {
+      console.error('Error fetching battery brands:', error);
+    }
+  };
+
+  fetchBatteryBrands();
+}, []);
+
+// Fetch Battery Models based on selected Battery Brands
+useEffect(() => {
+  const fetchBatteryModels = async () => {
+    if (selectedBatteryBrands.length > 0) {
+      try {
+        const selectedBrandIds = selectedBatteryBrands.map(option => option.value);
+        const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
+        const response = await axios.get(`${url.nodeapipath}/get-Batterymodel?${query}`);
+        const activeModels = response.data.filter(model => model.active);
+        setBatteryModels(activeModels.map(model => ({
+          value: model._id,
+          label: model.name,
+        })));
+      } catch (error) {
+        console.error('Error fetching battery models:', error);
+      }
+    } else {
+      setBatteryModels([]);
+    }
+  };
+
+  fetchBatteryModels();
+}, [selectedBatteryBrands]);
+
+// Handle Battery Brand Selection
+const handleBatteryBrandsChange = (selectedOptions) => {
+  setSelectedBatteryBrands(selectedOptions);
+};
+
+// Handle Battery Model Selection
+const handleBatteryModelsChange = (selectedOptions) => {
+  setSelectedBatteryModels(selectedOptions);
+};
+
+
+
+
+
+
+  //-------------------------alloy wheel brand and model ------------------------
+
+  useEffect(() => {
+    const fetchAlloywheelBrands = async () => {
+      try {
+        const response = await axios.get(`${url.nodeapipath}/get-alloybrand`);
+        const activeBrands = response.data.filter(brand => brand.active);
+        setAlloywheelBrands(activeBrands.map(brand => ({ label: brand.name, value: brand._id })));
+      } catch (error) {
+        console.error('Error fetching alloy wheel brands:', error);
+      }
+    };
+
+    fetchAlloywheelBrands();
+  }, []);
+
+  // Fetch Alloy Wheel Models based on selected Alloy Wheel Brands
+  useEffect(() => {
+    const fetchAlloywheelModels = async () => {
+      if (selectedAlloywheelBrands.length > 0) {
+        try {
+          const selectedBrandIds = selectedAlloywheelBrands.map(option => option.value);
+          const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
+          const response = await axios.get(`${url.nodeapipath}/get-AlloyWheelmodel?${query}`);
+          const activeModels = response.data.filter(model => model.active);
+          setAlloywheelModels(activeModels.map(model => ({
+            value: model._id,
+            label: model.name,
+          })));
+        } catch (error) {
+          console.error('Error fetching alloy wheel models:', error);
+        }
+      } else {
+        setAlloywheelModels([]);
+      }
+    };
+
+    fetchAlloywheelModels();
+  }, [selectedAlloywheelBrands]);
+
+  // Handle Alloy Wheel Brand Selection
+  const handleAlloywheelBrandsChange = (selectedOptions) => {
+    setSelectedAlloywheelBrands(selectedOptions);
+  };
+
+  // Handle Alloy Wheel Model Selection
+  const handleAlloywheelModelsChange = (selectedOptions) => {
+    setSelectedAlloywheelModels(selectedOptions);
+  };
+
+
+
+
+
+//-------------------------Accessories brand and model -------------------------
+
+// Fetch accessory brands
+useEffect(() => {
+  const fetchAccessoryBrands = async () => {
+    try {
+      const response = await axios.get(`${url.nodeapipath}/get-accessoriesbrand`);
+      const activeBrands = response.data.filter(brand => brand.active);
+      setAccessoryBrands(activeBrands.map(brand => ({ label: brand.name, value: brand._id })));
+    } catch (error) {
+      console.error('Error fetching accessory brands:', error);
+    }
+  };
+
+  fetchAccessoryBrands();
+}, []);
+
+// Fetch accessory models based on selected accessory brands
+useEffect(() => {
+  const fetchAccessoryModels = async () => {
+    if (selectedAccessoryBrands.length > 0) {
+      try {
+        const selectedBrandIds = selectedAccessoryBrands.map(option => option.value);
+        const query = selectedBrandIds.map(id => `brandid=${id}`).join('&');
+        const response = await axios.get(`${url.nodeapipath}/get-accessoriesmodel?${query}`);
+        const activeModels = response.data.filter(model => model.active);
+        setAccessoryModels(activeModels.map(model => ({
+          value: model._id,
+          label: model.name,
+        })));
+      } catch (error) {
+        console.error('Error fetching accessory models:', error);
+      }
+    } else {
+      setAccessoryModels([]);
+    }
+  };
+
+  fetchAccessoryModels();
+}, [selectedAccessoryBrands]);
+
+// Handle accessory brand selection
+const handleAccessoryBrandsChange = (selectedOptions) => {
+  setSelectedAccessoryBrands(selectedOptions);
+};
+
+// Handle accessory model selection
+const handleAccessoryModelsChange = (selectedOptions) => {
+  setSelectedAccessoryModels(selectedOptions);
+};
+
+
+
+
+
+
+
 
 // Function to generate slug
 const generateSlug = (text) => {
@@ -2382,27 +2881,83 @@ return (
       
                          <hr/>
 
-                        <div className="col-md-12 mt-5 mb-25">
-                          <label className="form-label">Vehicle Type</label>
-                          <div className="form-checkbox-box">
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value="car" name="size1" checked={tyreType === 'car'} onChange={(event) => setType(event.target.value)} />
-                              <label>Car</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value="bike" name="size1" checked={tyreType === 'bike'} onChange={(event) => setType(event.target.value)} />
-                              <label>Bike</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-      <input type="radio" value="truck" name="size1" checked={tyreType === 'truck'} onChange={(event) => setType(event.target.value)} />
+
+                         <div className="col-md-12 mt-5 mb-25">
+  <label className="form-label">Vehicle Type</label>
+  <div className="form-checkbox-box">
+    <div className="form-check form-check-inline">
+      <input
+        type="radio"
+        value="car"
+        name="size1"
+        checked={tyreType === 'car'}
+        onChange={(event) => setType(event.target.value)}
+      />
+      <label>Car</label>
+    </div>
+    <div className="form-check form-check-inline">
+      <input
+        type="radio"
+        value="bike"
+        name="size1"
+        checked={tyreType === 'bike'}
+        onChange={(event) => setType(event.target.value)}
+      />
+      <label>Bike</label>
+    </div>
+    <div className="form-check form-check-inline">
+      <input
+        type="radio"
+        value="truck"
+        name="size1"
+        checked={tyreType === 'truck'}
+        onChange={(event) => setType(event.target.value)}
+      />
       <label>Truck</label>
     </div>
     <div className="form-check form-check-inline">
-      <input type="radio" value="tractor" name="size1" checked={tyreType === 'tractor'} onChange={(event) => setType(event.target.value)} />
+      <input
+        type="radio"
+        value="tractor"
+        name="size1"
+        checked={tyreType === 'tractor'}
+        onChange={(event) => setType(event.target.value)}
+      />
       <label>Tractor</label>
-    </div>           
-                          </div>
-                        </div>
+    </div>
+    <div className="form-check form-check-inline">
+      <input
+        type="radio"
+        value="battery"
+        name="size1"
+        checked={tyreType === 'battery'}
+        onChange={(event) => setType(event.target.value)}
+      />
+      <label>Battery</label>
+    </div>
+    <div className="form-check form-check-inline">
+      <input
+        type="radio"
+        value="alloywheel"
+        name="size1"
+        checked={tyreType === 'alloywheel'}
+        onChange={(event) => setType(event.target.value)}
+      />
+      <label>Alloy Wheel</label>
+    </div>
+    <div className="form-check form-check-inline">
+      <input
+        type="radio"
+        value="accessories"
+        name="size1"
+        checked={tyreType === 'accessories'}
+        onChange={(event) => setType(event.target.value)}
+      />
+      <label>Accessories</label>
+    </div>
+  </div>
+</div>
+
 
                         {tyreType === 'car' && (
                           <>
@@ -2545,13 +3100,296 @@ return (
       )}
 
 
+{tyreType === 'battery' && (
+  <>
+    <div className="col-md-12 mt-3 mb-3">
+      <label className="form-label">Battery Type</label>
+      <div className="form-checkbox-box">
+        <div className="form-check form-check-inline">
+          <input
+            type="radio"
+            value="car"
+            name="batteryType"
+            checked={batteryType === 'car'}
+            onChange={(e) => setBatteryType(e.target.value)}
+            className="form-input"
+          />
+          <label>Car Battery</label>
+        </div>
+        <div className="form-check form-check-inline">
+          <input
+            type="radio"
+            value="bike"
+            name="batteryType"
+            checked={batteryType === 'bike'}
+            onChange={(e) => setBatteryType(e.target.value)}
+            className="form-input"
+          />
+          <label>Bike Battery</label>
+        </div>
+      </div>
+    </div>
+
+ 
+
+ 
+          <div className="col-md-12">
+            <label className="form-label">Battery Brand</label>
+            <Select
+              isMulti
+              options={batteryBrands}
+              value={selectedBatteryBrands}
+              onChange={handleBatteryBrandsChange}
+              className="form-input"
+            />
+          </div>
+          <br />
+          <div className="col-md-12">
+            <label className="form-label">Battery Models</label>
+            <Select
+              isMulti
+              options={batteryModels}
+              value={selectedBatteryModels}
+              onChange={handleBatteryModelsChange}
+              className="form-input"
+            />
+          </div>
+
+
+        <br/>
+        
+ 
+
+
+    {batteryType === 'car' && (
+      <>
+        <div className="col-md-12">
+          <label className="form-label">Car Brand</label>
+          <Select
+            isMulti
+            options={carBrands}
+            value={selectedCarBrands}
+            onChange={handleCarBrandsChange}
+            className="form-input"
+          />
+        </div>
+        <br />
+        <div className="col-md-12">
+          <label className="form-label">Car Models</label>
+          <Select
+            isMulti
+            options={carModels}
+            value={selectedCarModels}
+            onChange={handleCarModelsChange}
+            className="form-input"
+          />
+        </div>
+        <br />
+      </>
+    )}
+
+    {batteryType === 'bike' && (
+      <>
+        <div className="col-md-12">
+          <label className="form-label">Bike Brand</label>
+          <Select
+            isMulti
+            options={bikeBrands}
+            value={selectedBikeBrands}
+            onChange={handleBikeBrandsChange}
+            className="form-input"
+          />
+        </div>
+        <br />
+        <div className="col-md-12">
+          <label className="form-label">Bike Models</label>
+          <Select
+            isMulti
+            options={bikeModels}
+            value={selectedBikeModels}
+            onChange={handleBikeModelsChange}
+            className="form-input"
+          />
+        </div>
+        <br />
+      </>
+    )}
+  </>
+)}
+
+{tyreType === 'alloywheel' && (
+        <>
+          <div className="col-md-12 mt-3 mb-3">
+            <label className="form-label">Alloy Wheel Type</label>
+            <div className="form-checkbox-box">
+              <div className="form-check form-check-inline">
+                <input
+                  type="radio"
+                  value="car"
+                  name="alloywheelType"
+                  checked={alloywheelType === 'car'}
+                  onChange={(e) => setAlloywheelType(e.target.value)}
+                  className="form-input"
+                />
+                <label>Car Alloy Wheel</label>
+              </div>
+              <div className="form-check form-check-inline">
+                <input
+                  type="radio"
+                  value="bike"
+                  name="alloywheelType"
+                  checked={alloywheelType === 'bike'}
+                  onChange={(e) => setAlloywheelType(e.target.value)}
+                  className="form-input"
+                />
+                <label>Bike Alloy Wheel</label>
+              </div>
+            </div>
+          </div>
+
+          <div className="col-md-12">
+            <label className="form-label">Alloy Wheel Brand</label>
+            <Select
+              isMulti
+              options={alloywheelBrands}
+              value={selectedAlloywheelBrands}
+              onChange={handleAlloywheelBrandsChange}
+              className="form-input"
+            />
+          </div>
+          <br />
+          <div className="col-md-12">
+            <label className="form-label">Alloy Wheel Models</label>
+            <Select
+              isMulti
+              options={alloywheelModels}
+              value={selectedAlloywheelModels}
+              onChange={handleAlloywheelModelsChange}
+              className="form-input"
+            />
+          </div>
+          <br />
+
+          {alloywheelType === 'car' && (
+            <>
+              <div className="col-md-12">
+                <label className="form-label">Car Brand</label>
+                <Select
+                  isMulti
+                  options={carBrands} // Assuming you have an array of car brands
+                  value={selectedCarBrands}
+                  onChange={handleCarBrandsChange}
+                  className="form-input"
+                />
+              </div>
+              <br />
+              <div className="col-md-12">
+                <label className="form-label">Car Models</label>
+                <Select
+                  isMulti
+                  options={carModels} // Assuming you have an array of car models
+                  value={selectedCarModels}
+                  onChange={handleCarModelsChange}
+                  className="form-input"
+                />
+              </div>
+              <br />
+            </>
+          )}
+
+          {alloywheelType === 'bike' && (
+            <>
+              <div className="col-md-12">
+                <label className="form-label">Bike Brand</label>
+                <Select
+                  isMulti
+                  options={bikeBrands} // Assuming you have an array of bike brands
+                  value={selectedBikeBrands}
+                  onChange={handleBikeBrandsChange}
+                  className="form-input"
+                />
+              </div>
+              <br />
+              <div className="col-md-12">
+                <label className="form-label">Bike Models</label>
+                <Select
+                  isMulti
+                  options={bikeModels} // Assuming you have an array of bike models
+                  value={selectedBikeModels}
+                  onChange={handleBikeModelsChange}
+                  className="form-input"
+                />
+              </div>
+              <br />
+            </>
+          )}
+        </>
+      )}
+
+
+{tyreType === 'accessories' && (
+                                <>
+                                  <div className="col-md-12 mt-3 mb-3">
+                                    <label className="form-label">Accessory Type</label>
+                                    <div className="form-checkbox-box">
+                                      <div className="form-check form-check-inline">
+                                        <input
+                                          type="radio"
+                                          value="car"
+                                          name="accessoryType"
+                                          checked={accessoryType === 'car'}
+                                          onChange={(e) => setAccessoryType(e.target.value)}
+                                          className="form-input"
+                                        />
+                                        <label>Car Accessories</label>
+                                      </div>
+                                      <div className="form-check form-check-inline">
+                                        <input
+                                          type="radio"
+                                          value="bike"
+                                          name="accessoryType"
+                                          checked={accessoryType === 'bike'}
+                                          onChange={(e) => setAccessoryType(e.target.value)}
+                                          className="form-input"
+                                        />
+                                        <label>Bike Accessories</label>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  {/* Accessory Brand and Model Selection */}
+                                  {accessoryType && (
+                                    <>
+                                      <div className="col-md-12">
+                                      <label className="form-label">Accessories Brand</label>
+                                        <Select
+                                          isMulti
+                                          options={accessoryBrands} // Assuming you have an array of accessory brands
+                                          value={selectedAccessoryBrands}
+                                          onChange={handleAccessoryBrandsChange}
+                                          className="form-input"
+                                        />
+                                      </div>
+                                      <br />
+                                      <div className="col-md-12">
+                                        <label className="form-label">Accessories Model</label>
+                                        <Select
+                                          isMulti
+                                          options={accessoryModels} // Assuming you have an array of accessory models
+                                          value={selectedAccessoryModels}
+                                          onChange={handleAccessoryModelsChange}
+                                          className="form-input"
+                                        />
+                                      </div>
+                                      <br />
+                                    </>
+                                  )}
+                                </>
+                              )}
+
+
+
                         <hr/>
-
-
-
-
-
-
 
                         <div className="col-md-4">
                           <label className="form-label">Warranty</label>    
@@ -2565,137 +3403,267 @@ return (
                               </select>
                         </div>
 
-                        <div className="col-md-4">
-                          <label className="form-label">Speed Rating</label>
-                          <select name="categories" id="Categories" value={speedRating} onChange={(event) => setspeedRating(event.target.value)} className="form-select">
-                      <option value="">Select SpeedRating</option>
-                      {SpeedRating1.map((speedRating, index) => (
-                          <option key={index} value={speedRating}>
-                            {speedRating}
-                          </option>
-                        ))}
-                      </select>
-                        </div>
-
-                        <div className="col-md-4">
-                          <label className="form-label">Load Capacity</label>
-                          <select  name="categories" id="Categories" value={loadCapacity} onChange={(event) => setloadCapacity(event.target.value)} className="form-input">
-                          <option value="">Select LoadCapacity</option>
-                          {LoadCapacity1.map((loadCapacity, index) => (
-                              <option key={index} value={loadCapacity}>
-                                {loadCapacity}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-
-                        <div className="col-md-4">
-                          <label className="form-label">Material</label>
-                          <select name="categories" id="Categories" value={material} onChange={(event) => setMaterial(event.target.value)} className="form-input">
-                            <option value="">Material</option>
-                               {Material.map((material, index) => (
-                              <option key={index} value={material}>
-                                   {material}
-                                   </option>
-                                    ))}
-                                  </select>
-                        </div>
-
-
-<div className="col-md-2">
-  <label className="form-label">Width</label>
-  <select
-    name="categories"
-    id="Categories"
-    value={width}
-    onChange={(event) => setWidth(event.target.value)}
-    className="form-input"
-  >
-    <option value="">Width</option>
-    {(tyreType === 'car' ? widthOptions : widthOptions1).map((item, index) => (
-      <option key={index} value={item}>
-        {item}
+                        
+{tyreType !== 'accessories' && (
+  <div className="col-md-4">
+    <label className="form-label">
+      {tyreType === 'battery' ? 'Battery Capacity' : 
+       tyreType === 'alloywheel' ? 'Wheel Size' : 
+       'Speed Rating'}
+    </label>
+    <select
+      name="categories"
+      id="Categories"
+      value={
+        tyreType === 'battery' ? batteryCapacity :
+        tyreType === 'alloywheel' ? WheelSize : 
+        speedRating
+      }
+      onChange={(event) => {
+        if (tyreType === 'battery') {
+          setBatteryCapacity(event.target.value);
+        } else if (tyreType === 'alloywheel') {
+          setWheelSize(event.target.value);
+        } else {
+          setspeedRating(event.target.value);
+        }
+      }}
+      className="form-select"
+    >
+      <option value="">
+        {tyreType === 'battery' ? 'Select Battery Capacity' : 
+         tyreType === 'alloywheel' ? 'Select Wheel Size' : 
+         'Select Speed Rating'}
       </option>
-    ))}
-  </select>
-</div>
+      {(tyreType === 'battery' ? batteryCapacityOptions : 
+        tyreType === 'alloywheel' ? wheelSizeOptions : 
+        SpeedRating1).map((item, index) => (
+        <option key={index} value={item}>
+          {item}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
 
-<div className="col-md-2">
-  <label className="form-label">Height</label>
-  <select
-    name="categories"
-    id="Categories"
-    value={height}
-    onChange={(event) => setHeight(event.target.value)}
-    className="form-input"
-  >
-    <option value="">Height</option>
-    {(tyreType === 'car' ? heightOptions : heightOptions1).map((item, index) => (
-      <option key={index} value={item}>
-        {item}
+
+
+{tyreType !== 'accessories' && (
+  <div className="col-md-4">
+    <label className="form-label">
+      {tyreType === 'battery' ? 'Voltage' : 
+       tyreType === 'alloywheel' ? 'Color' : 
+       'Load Capacity'}
+    </label>
+    <select
+      name="categories"
+      id="Categories"
+      value={
+        tyreType === 'battery' ? voltage : 
+        tyreType === 'alloywheel' ? Color : 
+        loadCapacity
+      }
+      onChange={(event) => {
+        if (tyreType === 'battery') {
+          setVoltage(event.target.value);
+        } else if (tyreType === 'alloywheel') {
+          setColor(event.target.value);
+        } else {
+          setloadCapacity(event.target.value);
+        }
+      }}
+      className="form-input"
+    >
+      <option value="">
+        {tyreType === 'battery' ? 'Select Voltage' : 
+         tyreType === 'alloywheel' ? 'Select Color' : 
+         'Select Load Capacity'}
       </option>
-    ))}
-  </select>
-</div>
+      {(tyreType === 'battery' ? voltageOptions : 
+        tyreType === 'alloywheel' ? colorOptions : 
+        LoadCapacity1).map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
 
-<div className="col-md-3">
-  <label className="form-label">Customs</label>
-  <select
-    name="categories"
-    id="Categories"
-    value={customs}
-    onChange={(event) => setCustoms(event.target.value)}
-    className="form-input"
-  >
-    <option value="">Customs</option>
-    {(tyreType === 'car' ? customsOptions : customsOptions1).map((item, index) => (
-      <option key={index} value={item}>
-        {item}
+                        
+{tyreType !== 'battery' && tyreType !== 'accessories' && (
+  <div className="col-md-4">
+    <label className="form-label">Material</label>
+    <select
+      name="categories"
+      id="Categories"
+      value={material}
+      onChange={(event) => setMaterial(event.target.value)}
+      className="form-input"
+    >
+      <option value="">Material</option>
+      {Material.map((material, index) => (
+        <option key={index} value={material}>
+          {material}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+
+{tyreType !== 'accessories' && (
+  <div className="col-md-3">
+    <label className="form-label">
+      {tyreType === 'battery' ? 'Battery Weight' : 
+       tyreType === 'alloywheel' ? 'Holes' : 
+       'Width'}
+    </label>
+    <select
+      name="categories"
+      id="Categories"
+      value={
+        tyreType === 'battery' ? batteryWeight : 
+        tyreType === 'alloywheel' ? Holes : 
+        width
+      }
+      onChange={(event) => {
+        if (tyreType === 'battery') {
+          setBatteryWeight(event.target.value);
+        } else if (tyreType === 'alloywheel') {
+          setHoles(event.target.value);
+        } else {
+          setWidth(event.target.value);
+        }
+      }}
+      className="form-input"
+    >
+      <option value="">
+        {tyreType === 'battery' ? 'Select Battery Weight' : 
+         tyreType === 'alloywheel' ? 'Select Holes' : 
+         'Select Weight'}
       </option>
-    ))}
-  </select>
-</div>
+      {(tyreType === 'battery' ? batteryWeightOptions : 
+        tyreType === 'car' ? widthOptions : 
+        tyreType === 'alloywheel' ? holesOptions : 
+        widthOptions1).map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
 
 
-                  <div className="col-md-5 mb-25">
-                    <label className="form-label">Seasons</label>
-                    <div className="form-checkbox-box">
-                      <div className="form-check form-check-inline">
-                        <input
-                          type="checkbox"
-                          name="seasons"
-                          value="Winter"
-                          checked={seasons.includes("Winter")}
-                          onChange={(event) => {
-                            if (event.target.checked) {
-                              setSeasons([...seasons, event.target.value]);
-                            } else {
-                              setSeasons(seasons.filter((season) => season !== event.target.value));
-                            }
-                          }}
-                        />
-                        <label>Winter</label>
-                      </div>
-                      <div className="form-check form-check-inline">
-                        <input
-                          type="checkbox"
-                          name="seasons"
-                          value="Summer"
-                          checked={seasons.includes("Summer")}
-                          onChange={(event) => {
-                            if (event.target.checked) {
-                              setSeasons([...seasons, event.target.value]);
-                            } else {
-                              setSeasons(seasons.filter((season) => season !== event.target.value));
-                            }
-                          }}
-                        />
-                        <label>Summer</label>
-                      </div>
-                     
-                    </div>
-                  </div>
+{tyreType !== 'accessories' && (
+  <div className="col-md-3">
+    <label className="form-label">
+      {tyreType === 'battery' ? 'Battery Height' : 
+       tyreType === 'alloywheel' ? 'PCD' : 
+       'Height'}
+    </label>
+    <select
+      name="categories"
+      id="Categories"
+      value={
+        tyreType === 'battery' ? batteryHeight : 
+        tyreType === 'alloywheel' ? PCD : 
+        height
+      }
+      onChange={(event) => {
+        if (tyreType === 'battery') {
+          setBatteryHeight(event.target.value);
+        } else if (tyreType === 'alloywheel') {
+          setPCD(event.target.value);
+        } else {
+          setHeight(event.target.value);
+        }
+      }}
+      className="form-input"
+    >
+      <option value="">
+        {tyreType === 'battery' ? 'Select Battery Height' : 
+         tyreType === 'alloywheel' ? 'Select PCD' : 
+         'Select Height'}
+      </option>
+      {(tyreType === 'battery' ? batteryHeightOptions : 
+        tyreType === 'car' ? heightOptions : 
+        tyreType === 'alloywheel' ? pcdOptions : 
+        heightOptions1).map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+
+
+{tyreType !== 'battery' && tyreType !== 'alloywheel' && tyreType !== 'accessories' && (
+  <div className="col-md-3">
+    <label className="form-label">Customs</label>
+    <select
+      name="categories"
+      id="Categories"
+      value={customs}
+      onChange={(event) => setCustoms(event.target.value)}
+      className="form-input"
+    >
+      <option value="">Custom</option>
+      {/* Conditionally render the customs options based on the selected vehicle type */}
+      {(tyreType === 'car' ? customsOptions : customsOptions1).map((custom, index) => (
+        <option key={index} value={custom}>
+          {custom}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+
+
+
+{tyreType !== 'battery' && tyreType !== 'accessories' && (
+  <div className="col-md-5 mb-25">
+    <label className="form-label">Seasons</label>
+    <div className="form-checkbox-box">
+      <div className="form-check form-check-inline">
+        <input
+          type="checkbox"
+          name="seasons"
+          value="Winter"
+          checked={seasons.includes("Winter")}
+          onChange={(event) => {
+            if (event.target.checked) {
+              setSeasons([...seasons, event.target.value]);
+            } else {
+              setSeasons(seasons.filter((season) => season !== event.target.value));
+            }
+          }}
+        />
+        <label>Winter</label>
+      </div>
+      <div className="form-check form-check-inline">
+        <input
+          type="checkbox"
+          name="seasons"
+          value="Summer"
+          checked={seasons.includes("Summer")}
+          onChange={(event) => {
+            if (event.target.checked) {
+              setSeasons([...seasons, event.target.value]);
+            } else {
+              setSeasons(seasons.filter((season) => season !== event.target.value));
+            }
+          }}
+        />
+        <label>Summer</label>
+      </div>
+    </div>
+  </div>
+)}
 
 
                         <div className="col-md-5">
@@ -2709,17 +3677,19 @@ return (
                             )</span></label>
                            <input type="number" value={Salesprice} onChange={(event) => setSalesprice(event.target.value)} className="form-select" />
                         </div>
+
+                        
                         <div className="col-md-2">
                           <label className="form-label">Quantity</label>
-                          <select name="categories" id="Categories" value={quantity} onChange={(event) => setQuantity(event.target.value)} className="form-input">
-                        <option value="number">Quantity</option>
-                        {Quantity.map((quantity, index) => (
-                          <option key={index} value={quantity}>
-                            {quantity}
-                          </option>
-                        ))}
-                      </select>
-                        </div>
+<select name="categories" id="Categories" value={quantity} onChange={(event) => setQuantity(event.target.value)} className="form-input">
+    <option value="number">Quantity</option>
+    {Quantity.map((quantity, index) => (
+      <option key={index} value={quantity}>
+        {quantity}
+      </option>
+    ))}
+  </select>
+</div>
 
                         <div className="col-md-5">
                           <label className="form-label">Manufacture Month
@@ -2747,162 +3717,7 @@ return (
                         </select>
                         </div>
 
-{/*                        
-                         <hr/>
 
-                        <div className="col-md-12 mt-5 mb-25">
-                          <label className="form-label">Vehicle Type</label>
-                          <div className="form-checkbox-box">
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value="car" name="size1" checked={tyreType === 'car'} onChange={(event) => setType(event.target.value)} />
-                              <label>Car</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value="bike" name="size1" checked={tyreType === 'bike'} onChange={(event) => setType(event.target.value)} />
-                              <label>Bike</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-      <input type="radio" value="truck" name="size1" checked={tyreType === 'truck'} onChange={(event) => setType(event.target.value)} />
-      <label>Truck</label>
-    </div>
-    <div className="form-check form-check-inline">
-      <input type="radio" value="tractor" name="size1" checked={tyreType === 'tractor'} onChange={(event) => setType(event.target.value)} />
-      <label>Tractor</label>
-    </div>           
-                          </div>
-                        </div>
-
-                        {tyreType === 'car' && (
-                          <>
-    
-<div>
-    <div className="col-md-12">
-      <label className="form-label">Car Brand</label>
-      <Select
-        isMulti
-        options={carBrands}
-        value={selectedCarBrands}
-        onChange={handleCarBrandsChange}
-        className="form-input"
-      />
-      
-      <div className="col-md-12">
-        <label className="form-label">Add Models <span>(Type and make comma to separate tags)</span></label>
-        <Select
-          isMulti
-          options={carModels}
-          value={selectedCarModels}
-          onChange={handleCarModelsChange}
-          className="form-input"
-        />
-      </div>
-    </div>
-  </div>      
-                        </>
-                        )}
-
-                            {tyreType === 'bike' && (
-                          <>
-                          
-
-<div className="col-md-12">
-      <label className="form-label">Bike Brand</label>
-      <Select
-        isMulti
-        options={bikeBrands}
-        value={selectedBikeBrands}
-        onChange={handleBikeBrandsChange}
-        className="form-input"
-      />
-
-      <div className="col-md-12">
-        <label className="form-label">
-          Add Models <span>(Type and make comma to separate tags)</span>
-        </label>
-        <Select
-          isMulti
-          options={bikeModels}
-          value={selectedBikeModels}
-          onChange={handleBikeModelsChange}
-          className="form-input"
-        />
-      </div>
-    </div>
-
-
-
-                        <div className="col-md-12 mt-5 mb-25">
-                          <label className="form-label">Tyre Type</label>
-                          <div className="form-checkbox-box">
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value={fronttyre} onChange={(event) => setFronttyre(event.target.value)} className="form-input" />
-                              <label>Front Tyre</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                            <input type="radio" value={reartyre} onChange={(event) => setRearTyre(event.target.value)} className="form-input" />
-                              <label>Rear Tyre</label>
-                            </div>
-                           
-                          </div>
-                        </div>
-
-                        </>
-                        )}  
-
-
-{tyreType === 'truck' && (
-  <>
-    <div className="col-md-12">
-      <label className="form-label">Truck Brand</label>
-      <Select
-        isMulti
-        options={truckBrands}
-        value={selectedTruckBrands}
-        onChange={setSelectedTruckBrands}
-        className="form-input"
-      />
-    </div>
-    <div className="col-md-12">
-      <label className="form-label">Add Models <span>(Type and make comma to separate tags)</span></label>
-      <Select
-        isMulti
-        options={truckModels}
-        value={selectedTruckModels}
-        onChange={setSelectedTruckModels}
-        className="form-input"
-      />
-    </div>
-  </>
-)}
-
-{tyreType === 'tractor' && (
-        <>
-          <div className="col-md-12">
-            <label className="form-label">Tractor Brand</label>
-            <Select
-              isMulti
-              options={tractorBrands}
-              value={selectedTractorBrands}
-              onChange={setSelectedTractorBrands}
-              className="form-input"
-            />
-          </div>
-          <div className="col-md-12">
-            <label className="form-label">Add Models <span>(Type and make comma to separate tags)</span></label>
-            <Select
-              isMulti
-              options={tractorModels}
-              value={selectedTractorModels}
-              onChange={setSelectedTractorModels}
-              className="form-input"
-            />
-          </div>
-        </>
-      )}
-
-
-                       */} 
-                       
                        
                        <hr/> 
 
@@ -2941,18 +3756,18 @@ return (
 
           <label>
             City:
-            <select
-              value={address.city}
-              onChange={(e) => handleCityChange(index, e.target.value)}
-              disabled={!address.state}
-            >
-              <option value="">Select City</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+<select
+  value={address.city}
+  onChange={(e) => handleCityChange(index, e.target.value)}
+  disabled={!address.state}
+>
+  <option value="">Select City</option>
+  {(addressCities[index] || []).map((city) => (
+    <option key={city} value={city}>
+      {city}
+    </option>
+  ))}
+</select>
           </label>
 
 
