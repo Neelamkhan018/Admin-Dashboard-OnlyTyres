@@ -217,7 +217,11 @@ export default function DealerDetailsView() {
           </tr>
           <tr>
             <td><strong>Pincode:</strong></td>
-            <td>{business?.pincode || "N/A"}</td>
+            {/* <td>{business?.pincode || "N/A"}</td> */}
+            <td>
+  {business?.pincode?.join(", ") || "N/A"}
+</td>
+
           </tr>
           <tr>
             <td><strong>Product Category:</strong></td>

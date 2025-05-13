@@ -236,37 +236,81 @@ const navigate = useNavigate();
         }
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
     
-        const clientId = localStorage.getItem("clientId"); // Get clientId from localStorage
-        if (!clientId) {
-            alert("Client ID is missing. Please log in again.");
-            return;
-        }
+    //     const clientId = localStorage.getItem("clientId"); // Get clientId from localStorage
+    //     if (!clientId) {
+    //         alert("Client ID is missing. Please log in again.");
+    //         return;
+    //     }
     
-        try {
-            const response = await axios.post(`${url.nodeapipath}/add-business-details`, {
-                ...formData,
-                clientId, // Add clientId to request
-            });
+    //     try {
+    //         const response = await axios.post(`${url.nodeapipath}/add-business-details`, {
+    //             ...formData,
+    //             clientId, // Add clientId to request
+    //         });
     
-            console.log(response.data);
-            setSuccessMessage(true);
-            setFormData({
-                storename: '',
-                productCategory: '',
-                address: '',
-                method: [],
-                leastTime: '',
-                pincode: '',
-            });
-        } catch (error) {
-            console.error('Error adding business:', error);
-            alert('Failed to add business details.');
-        }
-    };
+    //         console.log(response.data);
+    //         setSuccessMessage(true);
+    //         setFormData({
+    //             storename: '',
+    //             productCategory: '',
+    //             address: '',
+    //             method: [],
+    //             leastTime: '',
+    //             pincode: '',
+    //         });
+    //     } catch (error) {
+    //         console.error('Error adding business:', error);
+    //         alert('Failed to add business details.');
+    //     }
+    // };
     
+
+
+
+
+const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const clientId = localStorage.getItem("clientId");
+    if (!clientId) {
+        alert("Client ID is missing. Please log in again.");
+        return;
+    }
+
+    // Split comma-separated pincodes into array and trim spaces
+    const pincodeArray = formData.pincode
+        .split(',')
+        .map((code) => code.trim())
+        .filter((code) => code !== '');
+
+    try {
+        const response = await axios.post(`${url.nodeapipath}/add-business-details`, {
+            ...formData,
+            pincode: pincodeArray,
+            clientId,
+        });
+
+        console.log(response.data);
+        setSuccessMessage(true);
+        setFormData({
+            storename: '',
+            productCategory: '',
+            address: '',
+            method: [],
+            leastTime: '',
+            pincode: '',
+        });
+    } catch (error) {
+        console.error('Error adding business:', error);
+        alert('Failed to add business details.');
+    }
+};
+
+
+
 
     return (
         <div className="sign-inup">
@@ -327,7 +371,7 @@ const navigate = useNavigate();
                                             required
                                         />
                                     </div>
-                                    <div className="form-group mb-4">
+                                    {/* <div className="form-group mb-4">
                                         <input
                                             type="text"
                                             name="pincode"
@@ -337,7 +381,20 @@ const navigate = useNavigate();
                                             className="form-control"
                                             required
                                         />
-                                    </div>
+                                    </div> */}
+
+                                    <div className="form-group mb-4">
+    <input
+        type="text"
+        name="pincode"
+        placeholder="Enter multiple pincodes separated by commas"
+        value={formData.pincode}
+        onChange={handleChange}
+        className="form-control"
+        required
+    />
+</div>
+
                                     <div className="form-group mb-1 d-flex gap-6">
                                         <label className="text-dark">Shipping Method:</label>
                                         <div>
@@ -357,22 +414,7 @@ const navigate = useNavigate();
                                             /> Fitting
                                         </div>
                                     </div>
-                                    {/* <div className="form-group mb-4">
-                                        <select
-                                            name="leastTime"
-                                            value={formData.leastTime}
-                                            onChange={handleChange}
-                                            className="form-control"
-                                            required
-                                        >
-                                            <option value="">Select Least Time</option>
-                                            <option value="1 hours">1 hours</option>
-                                            <option value="2 hours">2 hours</option>
-                                            <option value="4 hours">4 hours</option>
-                                            <option value="8 hours">8 hours</option>
-                                            <option value="24 hours">24 hours</option>
-                                        </select>
-                                    </div> */}
+                                
 
 
 <div className="form-group mb-4">
