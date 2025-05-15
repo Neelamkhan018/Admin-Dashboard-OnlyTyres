@@ -2132,14 +2132,39 @@ if (tyreType === 'accessories') {
   ];
 
 
-  
+
+
   // Example options — you can modify these based on your data
-const batteryWeightOptions = ['50mm', '60mm', '70mm', '80mm', '90mm'];
-const batteryHeightOptions = ['100mm', '110mm', '120mm', '130mm'];
-const voltageOptions = ['6V', '12V', '24V'];
+const batteryWeightOptions = [ '1kg', '2kg', '3kg', '4kg', '5kg', 
+  '6kg', '7kg', '8kg', '9kg', '10kg', 
+  '12kg', '14kg', '16kg', '18kg', '20kg', 
+  '22kg', '24kg', '26kg', '28kg', '30kg', 
+  '35kg', '40kg', '45kg', '50kg', '55kg', 
+  '60kg', '65kg', '70kg', '75kg', '80kg', 
+  '85kg', '90kg', '95kg', '100kg'];
+
+const batteryHeightOptions = ['50mm', '60mm', '70mm', '80mm', '90mm', 
+  '100mm', '110mm', '120mm', '130mm', '140mm', 
+  '150mm', '160mm', '170mm', '180mm', '190mm', 
+  '200mm', '210mm', '220mm', '230mm', '240mm'];
+
+const voltageOptions = ['6V', '12V',  '24V',  '36V',  '48V','60V',  '72V', 
+   '100V', '300V','400V', '800V' ];
+   
 const batteryCapacityOptions = [
-  '5Ah','10Ah', '20Ah', '30Ah', '40Ah', '50Ah', '60Ah', '65Ah', '70Ah', '80Ah'
+  '1Ah', '2Ah', '3Ah', '4Ah', '5Ah', '6Ah', '7Ah', '8Ah', '9Ah', '10Ah',
+  '11Ah', '12Ah', '13Ah', '14Ah', '15Ah', '16Ah', '17Ah', '18Ah', '19Ah', '20Ah',
+  '21Ah', '22Ah', '23Ah', '24Ah', '25Ah', '26Ah', '27Ah', '28Ah', '29Ah', '30Ah',
+  '31Ah', '32Ah', '33Ah', '34Ah', '35Ah', '36Ah', '37Ah', '38Ah', '39Ah', '40Ah',
+  '41Ah', '42Ah', '43Ah', '44Ah', '45Ah', '46Ah', '47Ah', '48Ah', '49Ah', '50Ah',
+  '51Ah', '52Ah', '53Ah', '54Ah', '55Ah', '56Ah', '57Ah', '58Ah', '59Ah', '60Ah',
+  '61Ah', '62Ah', '63Ah', '64Ah', '65Ah', '66Ah', '67Ah', '68Ah', '69Ah', '70Ah',
+  '71Ah', '72Ah', '73Ah', '74Ah', '75Ah', '76Ah', '77Ah', '78Ah', '79Ah', '80Ah',
+  '81Ah', '82Ah', '83Ah', '84Ah', '85Ah', '86Ah', '87Ah', '88Ah', '89Ah', '90Ah',
+  '91Ah', '92Ah', '93Ah', '94Ah', '95Ah', '96Ah', '97Ah', '98Ah', '99Ah', '100Ah'
 ];
+
+
 
 
 

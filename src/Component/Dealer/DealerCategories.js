@@ -552,7 +552,7 @@ export default function DealerCategories() {
       <div className="container d-flex align-items-center justify-content-center form-height pt-4">
         <div className="row justify-content-center w-100">
           <div className="col-lg-8 col-md-10"> 
-            <div className="card form-card p-4" style={{ minWidth: '600px' }}> 
+            <div className="card form-card p-4" style={{ minWidth: '1200px' , right : '180px'}}> 
               <div className="card-header form-card-header btn btn-primary">
                 <div className="ec-brand">
                   <a href="#" title="Ekka" style={{ color: 'white', fontWeight: 'bold', fontSize: '35px' }}>

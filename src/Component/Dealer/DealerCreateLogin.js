@@ -58,7 +58,7 @@ const DealerCreateLogin = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post(`${url.nodeapipath}/dealer-login`, { emailOrMobile: identifier, otp });
+            const response = await axios.post(`${url.nodeapipath}/dealer-login-otp`, { emailOrMobile: identifier, otp });
 
             setSuccessMessage(response.data.message);
             setErrorMessage('');
@@ -128,14 +128,14 @@ const DealerCreateLogin = () => {
                                     <Link to="/create-dealer">Don't have an account? <span className="text-primary">Sign up</span></Link>
                                 </p>
 
-                                {otpModalVisible && (
+                                {/* {otpModalVisible && (
                                     <div className="otp-modal">
                                         <div className="otp-modal-content">
                                             <span className="close" onClick={() => setOtpModalVisible(false)}>&times;</span>
                                             <p>{otpModalContent}</p>
                                         </div>
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         </div>
                     </div>

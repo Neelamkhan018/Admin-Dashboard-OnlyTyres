@@ -54,24 +54,72 @@ const DealerCreate = () => {
     });
   };
 
-  // Send OTP for mobile or email
-  const handleOtpSubmit = async (type) => {
-    try {
-      const data = type === 'mobile' 
-        ? { mobileNumber: formData.mobileNumber, type } 
-        : { email: formData.email, type };
 
-      const response = await axios.post(`${url.nodeapipath}/dealer-otp`, data);
+
+  // Send OTP for mobile or email
+  // const handleOtpSubmit = async (type) => {
+  //   try {
+  //     const data = type === 'mobile' 
+  //       ? { mobileNumber: formData.mobileNumber, type } 
+  //       : { email: formData.email, type };
+
+  //     const response = await axios.post(`${url.nodeapipath}/dealer-otp`, data);
       
-      // Display the OTP in a pop-up alert
-      alert(`OTP sent to ${type === 'mobile' ? formData.mobileNumber : formData.email}: ${response.data.otp}`);
-      setOtpSent({ ...otpSent, [type]: true });
-      setErrorMessage('');
-    } catch (error) {
-      console.error(error);
-      setErrorMessage(`Error sending ${type} OTP`);
+  //     // Display the OTP in a pop-up alert
+  //     alert(`OTP sent to ${type === 'mobile' ? formData.mobileNumber : formData.email}: ${response.data.otp}`);
+  //     setOtpSent({ ...otpSent, [type]: true });
+  //     setErrorMessage('');
+  //   } catch (error) {
+  //     console.error(error);
+  //     setErrorMessage(`Error sending ${type} OTP`);
+  //   }
+  // };
+
+//   const handleOtpSubmit = async (type) => {
+//   try {
+//     const data = type === 'mobile' 
+//       ? { mobileNumber: formData.mobileNumber, type } 
+//       : { email: formData.email, type };
+
+//     const response = await axios.post(`${url.nodeapipath}/dealer-otp`, data);
+
+//     if (type === 'email') {
+//       alert('OTP sent to your email. Please check your inbox or spam folder.');
+//     } else {
+//       alert('OTP sent to your mobile number.');
+//     }
+
+//     setOtpSent({ ...otpSent, [type]: true });
+//     setErrorMessage('');
+//   } catch (error) {
+//     console.error(error);
+//     setErrorMessage(`Error sending ${type} OTP`);
+//   }
+// };
+
+const handleOtpSubmit = async (type) => {
+  try {
+    const data = type === 'mobile' 
+      ? { mobileNumber: formData.mobileNumber, type } 
+      : { email: formData.email, type };
+
+    const response = await axios.post(`${url.nodeapipath}/dealer-otp`, data);
+
+    if (type === 'mobile') {
+      // ✅ Show OTP only for mobile
+      alert(`Your mobile OTP is: ${response.data.otp}`);
     }
-  };
+
+    // ✅ Set OTP sent status regardless of type
+    setOtpSent((prev) => ({ ...prev, [type]: true }));
+    setErrorMessage('');
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(`Error sending ${type} OTP`);
+  }
+};
+
+
 
 
   const handleSubmit = async (e) => {
