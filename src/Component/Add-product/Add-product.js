@@ -1729,7 +1729,7 @@ const colorOptions = [
 ];
 const wheelSizeOptions = ['14 inches','15 inches', '16 inches', '17 inches', '18 inches', '19 inches'];
 const holesOptions = ['4 Holes', '5 Holes', '6 Holes' , '7 Holes' ,'8 Holes'];
-const pcdOptions = ['100mm', '110mm', '120mm', '130mm' , '180mm'];
+const pcdOptions = ['98mm', '100mm', '108mm', '110mm', '112mm', '114.3mm', '115mm', '120mm', '127mm', '130mm', '139.7mm', '160mm','180mm'];
 
 
 //car
