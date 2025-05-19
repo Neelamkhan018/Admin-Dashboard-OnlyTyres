@@ -41,7 +41,9 @@ export default function Caredit() {
           image: [], // Initialize empty array for new images
         });
 
-        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching car brand details. Please try again later.');
         console.error('Error fetching car brand details:', error);
@@ -96,7 +98,9 @@ export default function Caredit() {
 
       // Update image previews if new images were uploaded
       if (data.image && Array.isArray(data.image)) {
-        setImagePreviews(data.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(data.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(data.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       }
 
       navigate('/carbrand');

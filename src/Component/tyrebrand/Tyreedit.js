@@ -41,7 +41,9 @@ const TyreEdit = () => {
           image: data.image,
         });
 
-        setImagePreviews(data.image.map(file => `${url.nodeapipath}/uploads/${file}`));
+        // setImagePreviews(data.image.map(file => `${url.nodeapipath}/uploads/${file}`));
+        setImagePreviews(data.image.map(file => `https://tyres.blr1.digitaloceanspaces.com/${file}`));
+
       } catch (error) {
         console.error('Error fetching tyre brand:', error);
         setError('Failed to load tyre brand. Please try again later.');

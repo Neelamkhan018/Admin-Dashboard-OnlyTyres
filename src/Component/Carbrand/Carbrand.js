@@ -496,28 +496,6 @@ useEffect(() => {
     }
   };
 
-  // // Handle form submission to add a car brand
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   const form = new FormData();
-  //   form.append('name', formData.name);
-  //   form.append('slug', formData.slug);
-  //   form.append('description', formData.description);
-  //   for (let i = 0; i < formData.image.length; i++) {
-  //     form.append('image', formData.image[i]);
-  //   }
-
-  //   try {
-  //     await axios.post(`${url.nodeapipath}/add-carbrand`, form, {
-  //       headers: { 'Content-Type': 'multipart/form-data' },
-  //     });
-  //     console.log('Added new car brand:', formData); // Log form data
-  //     fetchCarBrands(); // Refresh the car brand list after adding
-  //     resetForm(); // Reset the form
-  //   } catch (error) {
-  //     console.error('Error adding car brand:', error);
-  //   }
-  // };
 
 
   const handleSubmit = async (e) => {
@@ -732,7 +710,7 @@ useEffect(() => {
 
     <td className="table-cell">
                 {brand.image.map((item, idx) => (
-                  <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                  <img key={idx} src={`https://tyres.blr1.digitaloceanspaces.com/${item}`} alt={item} className="cat-thumb" />
                 ))}
               </td>
                                 <td>{brand.name}</td>

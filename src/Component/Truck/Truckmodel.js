@@ -259,7 +259,9 @@ const navigate = useNavigate()
                               <tr key={model._id}>
                                 <td className="table-cell">
                                   {model.image.map((item, idx) => (
-                                    <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                                    // <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                  <img key={idx} src={`https://tyres.blr1.digitaloceanspaces.com/${item}`} alt={item} className="cat-thumb" />
+
                                   ))}
                                 </td>
                                 <td>{model.name}</td>

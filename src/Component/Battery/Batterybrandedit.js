@@ -32,7 +32,9 @@ export default function BatteryBrandEdit() {
           image: [], 
         });
 
-        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching battery brand details. Please try again later.');
         console.error('Error fetching battery brand details:', error);

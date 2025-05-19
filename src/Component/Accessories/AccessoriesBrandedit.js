@@ -32,7 +32,9 @@ export default function AccessoriesBrandEdit() {
           image: [], 
         });
 
-        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching accessories brand details. Please try again later.');
         console.error('Error fetching accessories brand details:', error);

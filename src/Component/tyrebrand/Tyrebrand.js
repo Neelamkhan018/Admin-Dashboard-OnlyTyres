@@ -290,7 +290,9 @@ const Tyrebrand = () => {
 
               <td className="table-cell">
               {brand.image.map((item, idx) => (
-                <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                // <img key={idx} src={`${url.nodeapipath}/uploads/${item}`} alt={item} className="cat-thumb" />
+                <img key={idx} src={`https://tyres.blr1.digitaloceanspaces.com/${item}`} alt={item} className="cat-thumb" />
+
               ))}
             </td>
                               <td>{brand.name}</td>

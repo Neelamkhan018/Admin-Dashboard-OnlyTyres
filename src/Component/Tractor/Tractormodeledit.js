@@ -244,7 +244,9 @@ export default function TractorModelEdit() {
           image: [],
         });
 
-        setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(model.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching tractor model details. Please try again later.');
         console.error('Error fetching tractor model details:', error);

@@ -32,7 +32,9 @@ export default function AlloyWheelBrandEdit() {
           image: [], 
         });
 
-        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching alloy wheel brand details. Please try again later.');
         console.error('Error fetching alloy wheel brand details:', error);

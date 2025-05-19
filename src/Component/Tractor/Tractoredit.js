@@ -39,7 +39,9 @@ export default function TractorEdit() {
           image: [], // Initialize empty array for new images
         });
 
-        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching tractor brand details. Please try again later.');
         console.error('Error fetching tractor brand details:', error);
@@ -94,7 +96,9 @@ export default function TractorEdit() {
 
       // Update image previews if new images were uploaded
       if (data.image && Array.isArray(data.image)) {
-        setImagePreviews(data.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(data.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(data.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       }
 
       navigate('/Tractorbrand'); // Redirect to the tractor brand list

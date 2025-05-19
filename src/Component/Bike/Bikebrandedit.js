@@ -35,7 +35,9 @@ export default function BikebrandEdit() {
           image: [], 
         });
 
-        setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         setError('Error fetching bike brand details. Please try again later.');
         console.error('Error fetching bike brand details:', error);

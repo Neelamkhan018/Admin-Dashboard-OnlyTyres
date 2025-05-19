@@ -248,7 +248,9 @@ const CarModelEdit = () => {
           image: model.image || [],
         });
 
-        setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        // setImagePreviews(model.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+        setImagePreviews(model.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
+
       } catch (error) {
         console.error('Error details:', error.response || error.message || error);
         setError('Error fetching car model details. Please try again later.');
