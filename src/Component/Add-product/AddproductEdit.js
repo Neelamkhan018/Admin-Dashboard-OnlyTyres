@@ -2290,7 +2290,11 @@ useEffect(() => {
       fetchTyreBrands();
     }, []);
   
-    const activeTyreBrands = tyreBrands.filter(brand => brand.active);
+    // const activeTyreBrands = tyreBrands.filter(brand => brand.active);
+    const activeTyreBrands = tyreBrands.filter(
+  brand => brand.active && brand.category === tyreType
+);
+
   
     // Handle form input changes
     
@@ -2879,30 +2883,6 @@ return (
                        
 
 
-
-                              <div className="form-group row">
-                            <label htmlFor="tyreBrand" className="col-12 col-form-label">Tyre Brand</label>
-                            <div className="col-12">
-                                <div>
-                                <Select
-                      id="tyreBrand"
-                      name="tyreBrand"
-                      value={selectedTyreBrands}
-                      onChange={handleSelectChange}
-                      options={activeTyreBrands.map(brand => ({
-                        value: brand._id, // ID for form data
-                        label: brand.name // Name for display
-                      }))}
-                      className="form-input"
-                      isMulti
-                    />
-                                    </div>
-                            </div>
-                          </div>
-
-
-
-
       
                          <hr/>
 
@@ -2982,6 +2962,32 @@ return (
     </div>
   </div>
 </div>
+
+
+
+
+
+                              <div className="form-group row">
+                            <label htmlFor="tyreBrand" className="col-12 col-form-label">Tyre Brand</label>
+                            <div className="col-12">
+                                <div>
+                                <Select
+                      id="tyreBrand"
+                      name="tyreBrand"
+                      value={selectedTyreBrands}
+                      onChange={handleSelectChange}
+                      options={activeTyreBrands.map(brand => ({
+                        value: brand._id, // ID for form data
+                        label: brand.name // Name for display
+                      }))}
+                      className="form-input"
+                      isMulti
+                    />
+                                    </div>
+                            </div>
+                          </div>
+
+
 
 
                         {tyreType === 'car' && (
