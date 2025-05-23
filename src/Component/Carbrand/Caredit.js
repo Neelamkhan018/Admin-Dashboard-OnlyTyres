@@ -38,10 +38,10 @@ export default function Caredit() {
           name: brand.name || '',
           slug: brand.slug || '',
           description: brand.description || '',
-          image: [], // Initialize empty array for new images
+          image: [], 
         });
 
-        // setImagePreviews(brand.image.map(img => `${url.nodeapipath}/uploads/${img}`));
+      
         setImagePreviews(brand.image.map(img => `https://tyres.blr1.digitaloceanspaces.com/${img}`));
 
       } catch (error) {

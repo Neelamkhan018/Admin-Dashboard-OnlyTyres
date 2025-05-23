@@ -186,16 +186,7 @@ const AddDealerList = () => {
                                       style={{ width: "120px" }}
                                     />
                                   </td>
-                                  {/* <td>
-                                    <div className="form-check">
-                                      <input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        checked={alignments[tyre._id] || false}
-                                        onChange={() => handleAlignmentChange(tyre._id)}
-                                      />
-                                    </div>
-                                  </td> */}
+                              
 
 <td>
   <div className="form-check">
