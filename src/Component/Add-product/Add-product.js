@@ -1290,7 +1290,10 @@ const handleInputslug = (e) => {
 
 
   <div className="form-group row">
-                            <label htmlFor="tyreBrand" className="col-12 col-form-label">Tyre Brand</label>
+                            {/* <label htmlFor="tyreBrand" className="col-12 col-form-label">Tyre Brand</label> */}
+                              <label htmlFor="tyreBrand" className="col-12 col-form-label">
+    {['accessories', 'battery', 'alloywheel'].includes(tyreType) ? 'Brand' : 'Tyre Brand'}
+  </label>
                             <div className="col-12">
                             <Select
                       id="tyreBrand"
