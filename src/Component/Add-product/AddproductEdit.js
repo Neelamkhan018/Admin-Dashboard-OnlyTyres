@@ -129,6 +129,10 @@ const [batteryBrands, setBatteryBrands] = useState([]);
   const [accessoryModels, setAccessoryModels] = useState([]);
   const [selectedAccessoryModels, setSelectedAccessoryModels] = useState([]);
 
+const [truckWidth, setTruckWidth] = useState('');
+const [truckHeight, setTruckHeight] = useState('');
+const [tractorWidth, setTractorWidth] = useState('');
+const [tractorHeight, setTractorHeight] = useState('');
 
 
 const navigate = useNavigate()
@@ -852,6 +856,29 @@ const colorOptions = [
 const wheelSizeOptions = ['14 inches','15 inches', '16 inches', '17 inches', '18 inches', '19 inches'];
 const holesOptions = ['4 Holes', '5 Holes', '6 Holes' , '7 Holes' ,'8 Holes'];
 const pcdOptions = ['100mm', '110mm', '120mm', '130mm'];
+
+
+
+
+ //  Truck Tyre Sizes
+const truckWidthOptions = [
+  '7.50', '8.25', '9.00', '10.00', '10.50', '11.00', '11.25', '11.75', '12.00', '12.5'
+];
+
+const truckHeightOptions = [
+  '16', '20', '22.5', '24', '25'
+];
+
+//Tractor Tyre Sizes (Rear + Front Combined)
+const tractorWidthOptions = [
+  '5.00', '5.50', '6.00', '6.50', '7.50',
+  '8', '8.3', '9.5', '11.2', '12.4', '13.6', '14.9', '15.9', '16.9', '18.4'
+];
+
+const tractorHeightOptions = [
+  '12', '15', '16', '18', '20', '24', '28', '30', '34', '38'
+];
+
 
 
 //------------------------Fetch tractor brand and model-----------------------
@@ -2215,7 +2242,7 @@ return (
 )}
 
 
-{tyreType !== 'accessories' && (
+{/* {tyreType !== 'accessories' && (
   <div className="col-md-3">
     <label className="form-label">
       {tyreType === 'battery' ? 'Battery Weight' : 
@@ -2293,6 +2320,119 @@ return (
       {(tyreType === 'battery' ? batteryHeightOptions : 
         tyreType === 'car' ? heightOptions : 
         tyreType === 'alloywheel' ? pcdOptions : 
+        heightOptions1).map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)} */}
+
+
+{tyreType !== 'accessories' && (
+  <div className="col-md-3">
+    <label className="form-label">
+      {tyreType === 'battery' ? 'Battery Weight' :
+       tyreType === 'alloywheel' ? 'Holes' :
+       tyreType === 'truck' ? 'Truck Width' :
+       tyreType === 'tractor' ? 'Tractor Width' :
+       'Width'}
+    </label>
+    <select
+      name="categories"
+      id="Categories"
+      value={
+        tyreType === 'battery' ? batteryWeight :
+        tyreType === 'alloywheel' ? Holes :
+        tyreType === 'truck' ? truckWidth :
+        tyreType === 'tractor' ? tractorWidth :
+        width
+      }
+      onChange={(event) => {
+        const value = event.target.value;
+        if (tyreType === 'battery') {
+          setBatteryWeight(value);
+        } else if (tyreType === 'alloywheel') {
+          setHoles(value);
+        } else if (tyreType === 'truck') {
+          setTruckWidth(value);
+        } else if (tyreType === 'tractor') {
+          setTractorWidth(value);
+        } else {
+          setWidth(value);
+        }
+      }}
+      className="form-input"
+    >
+      <option value="">
+        {tyreType === 'battery' ? 'Select Battery Weight' :
+         tyreType === 'alloywheel' ? 'Select Holes' :
+         tyreType === 'truck' ? 'Select Truck Width' :
+         tyreType === 'tractor' ? 'Select Tractor Width' :
+         'Select Width'}
+      </option>
+      {(tyreType === 'battery' ? batteryWeightOptions :
+        tyreType === 'car' ? widthOptions :
+        tyreType === 'truck' ? truckWidthOptions :
+        tyreType === 'tractor' ? tractorWidthOptions :
+        tyreType === 'alloywheel' ? holesOptions :
+        widthOptions1).map((option, index) => (
+        <option key={index} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+{tyreType !== 'accessories' && (
+  <div className="col-md-3">
+    <label className="form-label">
+      {tyreType === 'battery' ? 'Battery Height' :
+       tyreType === 'alloywheel' ? 'PCD' :
+       tyreType === 'truck' ? 'Truck Height' :
+       tyreType === 'tractor' ? 'Tractor Height' :
+       'Height'}
+    </label>
+    <select
+      name="categories"
+      id="Categories"
+      value={
+        tyreType === 'battery' ? batteryHeight :
+        tyreType === 'alloywheel' ? PCD :
+        tyreType === 'truck' ? truckHeight :
+        tyreType === 'tractor' ? tractorHeight :
+        height
+      }
+      onChange={(event) => {
+        const value = event.target.value;
+        if (tyreType === 'battery') {
+          setBatteryHeight(value);
+        } else if (tyreType === 'alloywheel') {
+          setPCD(value);
+        } else if (tyreType === 'truck') {
+          setTruckHeight(value);
+        } else if (tyreType === 'tractor') {
+          setTractorHeight(value);
+        } else {
+          setHeight(value);
+        }
+      }}
+      className="form-input"
+    >
+      <option value="">
+        {tyreType === 'battery' ? 'Select Battery Height' :
+         tyreType === 'alloywheel' ? 'Select PCD' :
+         tyreType === 'truck' ? 'Select Truck Height' :
+         tyreType === 'tractor' ? 'Select Tractor Height' :
+         'Select Height'}
+      </option>
+      {(tyreType === 'battery' ? batteryHeightOptions :
+        tyreType === 'car' ? heightOptions :
+        tyreType === 'truck' ? truckHeightOptions :
+        tyreType === 'tractor' ? tractorHeightOptions :
+        tyreType === 'alloywheel' ? pcdOptions :
         heightOptions1).map((option, index) => (
         <option key={index} value={option}>
           {option}
