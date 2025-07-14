@@ -348,7 +348,21 @@ const pcdOptions = ['98mm', '100mm', '108mm', '110mm', '112mm', '114.3mm', '115m
   const customsOptions1 = [10,11,12,13,14,15,16,17,18,19,21,23];
 
 
-  const SpeedRating1= ['Q : up to 160 km/h', 'R: up to 170 km/h',' S:up to 180 km/h', "T: up to 190 km/h" , " H: up to 210 km/h ", " V: up to 240 km/h"];
+ 
+  const SpeedRating1 = [
+  'N: up to 140 km/h',
+  'P: up to 150 km/h',
+  'Q: up to 160 km/h',
+  'R: up to 170 km/h',
+  'S: up to 180 km/h',
+  'T: up to 190 km/h',
+  'U: up to 200 km/h',
+  'H: up to 210 km/h',
+  'V: up to 240 km/h',
+  'Z: up to 240+ km/h',
+  'W: up to 270 km/h',
+  'Y: up to 300 km/h'
+];
   const LoadCapacity1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
