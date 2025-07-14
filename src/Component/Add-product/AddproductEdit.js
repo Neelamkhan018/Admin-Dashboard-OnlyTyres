@@ -798,7 +798,22 @@ if (tyreType === 'accessories') {
 
 
 
-  const SpeedRating1= ['Q : up to 160 km/h', 'R: up to 170 km/h',' S:up to 180 km/h', "T: up to 190 km/h" , " H: up to 210 km/h ", " V: up to 240 km/h"];
+ 
+  const SpeedRating1 = [
+  'N: up to 140 km/h',
+  'P: up to 150 km/h',
+  'Q: up to 160 km/h',
+  'R: up to 170 km/h',
+  'S: up to 180 km/h',
+  'T: up to 190 km/h',
+  'U: up to 200 km/h',
+  'H: up to 210 km/h',
+  'V: up to 240 km/h',
+  'Z: up to 240+ km/h',
+  'W: up to 270 km/h',
+  'Y: up to 300 km/h'
+];
+
   const LoadCapacity1 = [47, 52, 54, 58, 62, 65, 69, 73, 82, 85, 88, 91, 94, 95, 98, 99, 100, 104, 108] 
   const Quantity = [1,2,3,4,5,6,7,8,9,10];
   const Material = ["Steel","Nylon"];
